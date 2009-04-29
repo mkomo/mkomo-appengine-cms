@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block head_supplement %}
+<style>
+.edit-page th{
+	text-align: right;
+	vertical-align: top;
+	font-weight: normal;
+}
+.edit-page input{
+	border: 1px solid #14AC00;
+	width: 400px;
+}
+.edit-page textarea{
+	border: 1px solid #14AC00;
+	height: 400px;
+	width: 550px;
+}
+</style>
+{% endblock %}
+
+{% block headline %}
+	{% ifequal page.uri None %}
+		edit new page
+	{% else %}
+		edit {{page.uri}}
+	{% endifequal %}
+{% endblock %}
+
+{% block content %}
+
+	{% if page.is_saved %}
+		<div>last updated: {{page.date_last_edited|date:"r"|lower}}</div>
+	{% endif %}
+	<form method="post">
+		<table class="edit-page">
+		{{page_form}}
+		</table>
+		{% if page.is_saved %}
+		<input type="hidden" name="key" value="{{ page.key }}"/>
+		{% endif %}
+		<input type="submit" value="save page"/>
+	</form>
+{% endblock %}

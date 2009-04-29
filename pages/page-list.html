@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block headline %}pages on mkomo.com{% endblock %}
+
+{% block content %}
+	<div><a href="/admin/edit">add a new page</a></div>
+	<table>
+	{% for page in pages %}
+	    <tr>
+	    	<td>{{ page.uri }}</td>
+	    	<td>
+		    	<a href="/admin/edit?key={{ page.key }}">[edit]</a>
+		    	<a href="/admin/delete?key={{ page.key }}">[delete]</a>
+		    	<a href="{{ page.uri }}">[go]</a>
+		    </td>
+	    </tr>
+	{% endfor %}
+	</table>
+{% endblock %}

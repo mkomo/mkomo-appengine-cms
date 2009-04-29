@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% ifequal page.title None %}
+	{% block title %}matt komorowski - {{page.title}}{% endblock %}
+{% endifequal %}
+
+{% ifequal page.description None %}
+	{% block description %}{{page.description}}{% endblock %}
+{% endifequal %}
+
+{% ifequal page.keywords None %}
+	{% block keywords %}{{page.keywords}}{% endblock %}
+{% endifequal %}
+
+{% block headline %}{{page.headline}}{% endblock %}
+
+{% block content %}
+	{{page.content}}
+	{% if is_admin %}
+		<a href="/admin/edit?key={{ page.key }}">[edit]</a>
+	{% endif %}
+{% endblock %}
