@@ -14,10 +14,12 @@
 .edit-page textarea{
 	border: 1px solid #14AC00;
 	height: 400px;
-	width: 550px;
+	width: 850px;
 }
 </style>
 {% endblock %}
+
+{% block container_type %}dynamic-width{% endblock %}
 
 {% block headline %}
 	{% ifequal page.uri None %}
