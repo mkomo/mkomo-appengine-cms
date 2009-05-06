@@ -62,6 +62,16 @@ body {
 .content .body{
 	padding: 3px 3px 8px 3px;
 }
+.content .body h2{
+	margin: 0;
+	padding: 0;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.content .body p, .content .body ul{
+	margin: 4px 0 16px 0;
+}
+
 .content a{
 	color: #139c01;
 	text-decoration: none;
