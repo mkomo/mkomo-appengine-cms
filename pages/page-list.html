@@ -10,7 +10,8 @@
 	    	<td>{{ page.uri }}</td>
 	    	<td>
 		    	<a href="/admin/edit?key={{ page.key }}">[edit]</a>
-		    	<a href="/admin/delete?key={{ page.key }}">[delete]</a>
+		    	<a href="/admin/delete?key={{ page.key }}"
+		    		onclick="return confirm('are you sure?')">[delete]</a>
 		    	<a href="{{ page.uri }}">[go]</a>
 		    </td>
 	    </tr>
