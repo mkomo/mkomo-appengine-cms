@@ -2,16 +2,16 @@
 
 {% block head_supplement %}
 <style>
-.edit-page th{
+.edit-object th{
 	text-align: right;
 	vertical-align: top;
 	font-weight: normal;
 }
-.edit-page input{
+.edit-object input{
 	border: 1px solid #14AC00;
 	width: 400px;
 }
-.edit-page textarea{
+.edit-object textarea{
 	border: 1px solid #14AC00;
 	height: 400px;
 	width: 850px;
@@ -22,25 +22,21 @@
 {% block container_type %}dynamic-width{% endblock %}
 
 {% block headline %}
-	{% ifequal page.uri None %}
-		edit new page
-	{% else %}
-		edit {{page.uri}}
-	{% endifequal %}
+	edit {{identifier}}
 {% endblock %}
 
 {% block content %}
 
-	{% if page.is_saved %}
-		<div>last updated: {{page.date_last_edited|date:"r"|lower}}</div>
+	{% if object.is_saved %}
+		<div>last updated: {{object.date_last_edited|date:"r"|lower}}</div>
 	{% endif %}
 	<form method="post">
-		<table class="edit-page">
-		{{page_form}}
+		<table class="edit-object">
+		{{object_form}}
 		</table>
-		{% if page.is_saved %}
-		<input type="hidden" name="key" value="{{ page.key }}"/>
+		{% if object.is_saved %}
+		<input type="hidden" name="key" value="{{ object.key }}"/>
 		{% endif %}
-		<input type="submit" value="save page"/>
+		<input type="submit" value="save object"/>
 	</form>
 {% endblock %}

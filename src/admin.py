@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.db import djangoforms
 
-from src.mkomo import Page, ModelAndView, MavRequestHandler
+from src.mkomo import Page, Story, ModelAndView, MavRequestHandler
 
 class PageForm(djangoforms.ModelForm):
   class Meta:
@@ -27,21 +27,25 @@ class DeletePage(MavRequestHandler):
         key = self.request.get('key')
         page = Page.get(key)
         page.delete()
-        self.redirect('/admin/list')
+        self.redirect('/admin/pages')
         
             
 class EditPage(MavRequestHandler):
-    def get_model_and_view(self):
-        key = self.request.get('key')
-        if (len(key) > 0):
-            page = Page.get(key)
-        else:
-            page = Page()
+    def get_model_and_view(self, page_form=None):
+        if page_form is None:
+            key = self.request.get('key')
+            if (len(key) > 0):
+                page_form = PageForm(instance=Page.get(key))
+            else:
+                page_form = PageForm(instance=Page())                
+        identifier = 'new page' if page_form.instance.url is None \
+                                else page_form.instance.url
         return ModelAndView(view='pages/page-edit.html', 
-                            model={'page': page,
-                                   'page_form': PageForm(instance=page)})
+                            model={'object': page_form.instance,
+                                   'identifier': identifier,
+                                   'object_form': page_form})
         
-    def post(self):        
+    def post_model_and_view(self):        
         key = self.request.get('key')
         if (len(key) > 0):
             page = Page.get(key)
@@ -52,17 +56,70 @@ class EditPage(MavRequestHandler):
             # Save the data, and redirect to the view page
             entity = data.save()
             entity.put()
-            self.redirect('/admin/list')
+            self.redirect('/admin/pages')
         else:
             # Reprint the form
-            return ModelAndView(view='pages/page-edit.html', 
-                                model={'page': page,
-                                       'page_form': PageForm(instance=page)})
+            return self.get_model_and_view(data)
+            
+
+class StoryForm(djangoforms.ModelForm):
+  class Meta:
+    model = Story
+    exclude = ['tags']
+    
+    
+class ListStories(MavRequestHandler):
+    def get_model_and_view(self):
+        stories = Story.all()
+        return ModelAndView(view='pages/story-list.html', 
+                            model={'stories': stories})
+   
+    
+class DeleteStory(MavRequestHandler):
+    def get_model_and_view(self):
+        key = self.request.get('key')
+        story = Story.get(key)
+        story.delete()
+        self.redirect('/admin/stories')
+        
+            
+class EditStory(MavRequestHandler):
+    def get_model_and_view(self, story_form=None):
+        if story_form is None:
+            key = self.request.get('key')
+            if (len(key) > 0):
+                story_form = StoryForm(instance=Story.get(key))
+            else:
+                story_form = StoryForm(instance=Story())
+        identifier = 'new story' if story_form.instance.headline is None \
+                                 else story_form.instance.headline.join('"'*2)
+        return ModelAndView(view='pages/page-edit.html', 
+                            model={'object': story_form.instance,
+                                   'identifier': identifier,
+                                   'object_form': story_form})
+        
+    def post_model_and_view(self):        
+        key = self.request.get('key')
+        if (len(key) > 0):
+            story = Story.get(key)
+        else:
+            story = Story()
+        data = StoryForm(data=self.request.POST, instance=story)
+        if data.is_valid():
+            # Save the data, and redirect to the view page
+            entity = data.save()
+            entity.put()
+            self.redirect('/admin/stories')
+        else:
+            return self.get_model_and_view(data)
             
             
-application = webapp.WSGIApplication([('/admin/edit', EditPage),
-                                      ('/admin/delete', DeletePage),
-                                      ('/admin/.*', ListPages)],
+application = webapp.WSGIApplication([('/admin/pages/edit', EditPage),
+                                      ('/admin/pages/delete', DeletePage),
+                                      ('/admin/pages.*', ListPages),
+                                      ('/admin/stories/edit', EditStory),
+                                      ('/admin/stories/delete', DeleteStory),
+                                      ('/admin/stories.*', ListStories)],
                                      debug=True)
 
 def main():

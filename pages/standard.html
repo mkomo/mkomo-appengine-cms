@@ -17,6 +17,6 @@
 {% block content %}
 	{{page.content}}
 	{% if is_admin %}
-		<a href="/admin/edit?key={{ page.key }}">[edit]</a>
+		<a href="/admin/pages/edit?key={{ page.key }}">[edit]</a>
 	{% endif %}
 {% endblock %}
