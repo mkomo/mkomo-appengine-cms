@@ -24,7 +24,7 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(mav)
             
     def render(self, mav):
-        path = os.path.join(os.path.abspath('..'), mav.view)
+        path = os.path.join(os.path.abspath('..'), 'pages', mav.view)
         model = mav.model
         if users.is_current_user_admin():
             model['is_admin'] = True
@@ -57,10 +57,10 @@ class StandardPage(MavRequestHandler):
         uri = self.request.path
         page = Page.gql("where uri=:1", uri).get()
         if page is not None:
-            return ModelAndView(view='pages/standard.html',
+            return ModelAndView(view='standard.html',
                                 model={'page': page})
         else:
-            return ModelAndView(view='pages/error.html',
+            return ModelAndView(view='error.html',
                                 model={'uri': uri})
             
 

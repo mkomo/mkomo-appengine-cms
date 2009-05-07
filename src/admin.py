@@ -18,7 +18,7 @@ class PageForm(djangoforms.ModelForm):
 class ListPages(MavRequestHandler):
     def get_model_and_view(self):
         pages = Page.all()
-        return ModelAndView(view='pages/page-list.html', 
+        return ModelAndView(view='admin/page-list.html', 
                             model={'pages': pages})
    
     
@@ -40,7 +40,7 @@ class EditPage(MavRequestHandler):
                 page_form = PageForm(instance=Page())                
         identifier = 'new page' if page_form.instance.url is None \
                                 else page_form.instance.url
-        return ModelAndView(view='pages/page-edit.html', 
+        return ModelAndView(view='admin/object-edit.html', 
                             model={'object': page_form.instance,
                                    'identifier': identifier,
                                    'object_form': page_form})
@@ -71,7 +71,7 @@ class StoryForm(djangoforms.ModelForm):
 class ListStories(MavRequestHandler):
     def get_model_and_view(self):
         stories = Story.all()
-        return ModelAndView(view='pages/story-list.html', 
+        return ModelAndView(view='admin/story-list.html', 
                             model={'stories': stories})
    
     
@@ -93,7 +93,7 @@ class EditStory(MavRequestHandler):
                 story_form = StoryForm(instance=Story())
         identifier = 'new story' if story_form.instance.headline is None \
                                  else story_form.instance.headline.join('"'*2)
-        return ModelAndView(view='pages/page-edit.html', 
+        return ModelAndView(view='admin/object-edit.html', 
                             model={'object': story_form.instance,
                                    'identifier': identifier,
                                    'object_form': story_form})
