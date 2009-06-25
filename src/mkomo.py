@@ -1,4 +1,5 @@
 import os
+import mimetypes
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -51,6 +52,9 @@ class Story(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
     tags = db.ListProperty(db.Category)
     
+class Asset(db.Model):
+    uri = db.StringProperty()
+    payload = db.BlobProperty()
     
 class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
@@ -60,11 +64,24 @@ class StandardPage(MavRequestHandler):
             return ModelAndView(view='standard.html',
                                 model={'page': page})
         else:
+            self.response.set_status(404)
             return ModelAndView(view='error.html',
                                 model={'uri': uri})
-            
 
-application = webapp.WSGIApplication([('/.*', StandardPage)],
+
+class AssetReq(webapp.RequestHandler):
+    def get(self):
+        uri = self.request.path[8:]
+        asset = Asset.gql("where uri=:1", uri).get()
+        if asset is not None:
+            self.response.headers['Content-Type'] = mimetypes.guess_type(uri)[0]
+            self.response.out.write(asset.payload)
+        else:
+            self.error(404)
+
+    
+application = webapp.WSGIApplication([('/assets/.*', AssetReq),
+                                      ('/.*', StandardPage)],
                                      debug=True)
 
 def main():

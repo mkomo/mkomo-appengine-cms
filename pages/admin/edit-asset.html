@@ -1,0 +1,42 @@
+{% extends "../base.html" %}
+
+{% block head_supplement %}
+<style>
+.edit-object th{
+	text-align: right;
+	vertical-align: top;
+	font-weight: normal;
+}
+.edit-object input{
+	border: 1px solid #14AC00;
+	width: 400px;
+}
+</style>
+{% endblock %}
+
+{% block container_type %}dynamic-width{% endblock %}
+
+{% block headline %}
+	edit {{identifier}}
+{% endblock %}
+
+{% block content %}
+	<form method="post" enctype="multipart/form-data">
+		<table class="edit-object">
+		<tbody>
+			<tr>
+				<th><label for="uri">Uri:</label></th>
+				<td><input name="uri" id="uri" type="text" value="{{uri}}"></td>
+			</tr>
+			<tr>
+				<th><label for="payload">Payload:</label></th>
+				<td><input name="payload" id="payload" type="file"/></td>
+			</tr>
+		</tbody>
+		</table>
+		{% if object.is_saved %}
+		<input type="hidden" name="key" value="{{ object.key }}"/>
+		{% endif %}
+		<input type="submit" value="save object"/>
+	</form>
+{% endblock %}

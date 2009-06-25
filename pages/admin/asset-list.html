@@ -1,0 +1,20 @@
+{% extends "../base.html" %}
+
+{% block headline %}assets on mkomo.com{% endblock %}
+
+{% block content %}
+	<div><a href="/admin/assets/edit">add a new asset</a></div>
+	<table>
+	{% for asset in assets %}
+	    <tr>
+	    	<td>{{ asset.uri }}</td>
+	    	<td>
+		    	<a href="/admin/assets/edit?key={{ asset.key }}">[edit]</a>
+		    	<a href="/admin/assets/delete?key={{ asset.key }}"
+		    		onclick="return confirm('are you sure?')">[delete]</a>
+		    	<a href="/assets/{{ asset.uri }}">[open]</a>
+		    </td>
+	    </tr>
+	{% endfor %}
+	</table>
+{% endblock %}

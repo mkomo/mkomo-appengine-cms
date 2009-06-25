@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.db import djangoforms
 
-from src.mkomo import Page, Story, ModelAndView, MavRequestHandler
+from src.mkomo import Page, Story, Asset, ModelAndView, MavRequestHandler
 
 class PageForm(djangoforms.ModelForm):
   class Meta:
@@ -38,8 +38,8 @@ class EditPage(MavRequestHandler):
                 page_form = PageForm(instance=Page.get(key))
             else:
                 page_form = PageForm(instance=Page())                
-        identifier = 'new page' if page_form.instance.url is None \
-                                else page_form.instance.url
+        identifier = 'new page' if page_form.instance.uri is None \
+                                else page_form.instance.uri
         return ModelAndView(view='admin/object-edit.html', 
                             model={'object': page_form.instance,
                                    'identifier': identifier,
@@ -60,66 +60,61 @@ class EditPage(MavRequestHandler):
         else:
             # Reprint the form
             return self.get_model_and_view(data)
-            
-
-class StoryForm(djangoforms.ModelForm):
-  class Meta:
-    model = Story
-    exclude = ['tags']
     
     
-class ListStories(MavRequestHandler):
+class ListAssets(MavRequestHandler):
     def get_model_and_view(self):
-        stories = Story.all()
-        return ModelAndView(view='admin/story-list.html', 
-                            model={'stories': stories})
+        assets = Asset.all()
+        return ModelAndView(view='admin/asset-list.html', 
+                            model={'assets': assets})
    
     
-class DeleteStory(MavRequestHandler):
+class DeleteAsset(MavRequestHandler):
     def get_model_and_view(self):
         key = self.request.get('key')
-        story = Story.get(key)
-        story.delete()
-        self.redirect('/admin/stories')
+        asset = Asset.get(key)
+        asset.delete()
+        self.redirect('/admin/assets')
         
             
-class EditStory(MavRequestHandler):
-    def get_model_and_view(self, story_form=None):
-        if story_form is None:
+class EditAsset(MavRequestHandler):
+    def get_model_and_view(self, asset_form=None):
+        if asset_form is None:
             key = self.request.get('key')
             if (len(key) > 0):
-                story_form = StoryForm(instance=Story.get(key))
+                uri = Asset.get(key).uri
             else:
-                story_form = StoryForm(instance=Story())
-        identifier = 'new story' if story_form.instance.headline is None \
-                                 else story_form.instance.headline.join('"'*2)
-        return ModelAndView(view='admin/object-edit.html', 
-                            model={'object': story_form.instance,
-                                   'identifier': identifier,
-                                   'object_form': story_form})
+                uri = ''
+        identifier = 'new asset' if uri == '' \
+                                else uri
+        return ModelAndView(view='admin/edit-asset.html', 
+                            model={'identifier': identifier,
+                                   'uri': uri})
         
     def post_model_and_view(self):        
         key = self.request.get('key')
         if (len(key) > 0):
-            story = Story.get(key)
+            asset = Asset.get(key)
         else:
-            story = Story()
-        data = StoryForm(data=self.request.POST, instance=story)
-        if data.is_valid():
+            asset = Asset()
+        uri = self.request.get('uri')
+        if uri != '':
             # Save the data, and redirect to the view page
-            entity = data.save()
-            entity.put()
-            self.redirect('/admin/stories')
+            asset.uri = uri
+            asset.payload = db.Blob(self.request.get("payload"))
+            asset.put()
+            self.redirect('/admin/assets')
         else:
+            # Reprint the form
             return self.get_model_and_view(data)
             
             
 application = webapp.WSGIApplication([('/admin/pages/edit', EditPage),
                                       ('/admin/pages/delete', DeletePage),
                                       ('/admin/pages.*', ListPages),
-                                      ('/admin/stories/edit', EditStory),
-                                      ('/admin/stories/delete', DeleteStory),
-                                      ('/admin/stories.*', ListStories)],
+                                      ('/admin/assets/edit', EditAsset),
+                                      ('/admin/assets/delete', DeleteAsset),
+                                      ('/admin/assets.*', ListAssets)],
                                      debug=True)
 
 def main():
