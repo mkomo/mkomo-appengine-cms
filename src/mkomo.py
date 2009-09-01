@@ -43,12 +43,9 @@ class Page(db.Model):
     date_last_edited = db.DateTimeProperty(auto_now_add=True)
     
 
-class Story(db.Model):
+class Entry(db.Model):
     headline = db.StringProperty()
-    snippet = db.StringProperty()
-    thumbnail_url = db.LinkProperty()
-    continue_link_url = db.LinkProperty()
-    continue_link_text = db.StringProperty()
+    body = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)
     tags = db.ListProperty(db.Category)
     
@@ -68,7 +65,23 @@ class StandardPage(MavRequestHandler):
             return ModelAndView(view='error.html',
                                 model={'uri': uri})
 
-
+  
+class ProjectPage(MavRequestHandler):
+    def get_model_and_view(self):
+        offset = self.request.get('offset')
+        if offset is None or len(offset) < 1: 
+            offset = 0
+        else:
+            offset = int(offset)
+        q = Entry.all()
+        q.order('-date').order('-__key__')
+        entries = q.fetch(100, offset)
+        headline = "my life's work (or my distractions from it)"
+        return ModelAndView(view='entries.html',
+                            model={'entries': entries,
+                                   'headline': headline})
+        
+    
 class AssetReq(webapp.RequestHandler):
     def get(self):
         uri = self.request.path[8:]
@@ -81,6 +94,7 @@ class AssetReq(webapp.RequestHandler):
 
     
 application = webapp.WSGIApplication([('/assets/.*', AssetReq),
+                                      #('/projects', ProjectPage),
                                       ('/.*', StandardPage)],
                                      debug=True)
 

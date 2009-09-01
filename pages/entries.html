@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block headline %}{{ headline }}{% endblock %}
+
+{% block content %}
+    {% for entry in entries %}
+		<div class="entry">
+			<div class="entry-headline">
+				{{ entry.headline }}
+			</div>
+			<div class="entry-snippet">
+				{{ entry.body }}
+			</div> 
+		</div>
+	{% endfor %}
+{% endblock %}

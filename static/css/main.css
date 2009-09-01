@@ -82,3 +82,16 @@ body {
 .content .bold{
 	font-weight: bold;
 }
+/********************* story specific ********************/
+.content .entry {
+	margin: 4px;
+	padding: 4px;
+}
+.entry .entry-headline{
+	font-size: 1.1em;
+	font-weight: bold;
+}
+.entry .entry-snippet{
+	padding: 0 4px;
+	
+}

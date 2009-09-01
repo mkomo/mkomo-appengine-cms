@@ -1,0 +1,19 @@
+{% extends "../base.html" %}
+
+{% block headline %}entries on mkomo.com{% endblock %}
+
+{% block content %}
+	<div><a href="/admin/entries/edit">add a new entry</a></div>
+	<table>
+	{% for entry in entries %}
+	    <tr>
+	    	<td>{{ entry.headline }}</td>
+	    	<td>
+		    	<a href="/admin/entries/edit?key={{ entry.key }}">[edit]</a>
+		    	<a href="/admin/entries/delete?key={{ entry.key }}"
+		    		onclick="return confirm('are you sure?')">[delete]</a>
+		    </td>
+	    </tr>
+	{% endfor %}
+	</table>
+{% endblock %}
