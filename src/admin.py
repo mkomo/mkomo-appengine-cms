@@ -168,18 +168,28 @@ class EditAsset(MavRequestHandler):
         else:
             # Reprint the form
             return self.get_model_and_view(data)
-            
-            
-application = webapp.WSGIApplication([('/admin/entries/edit', EditEntry),
-                                      ('/admin/entries/delete', DeleteEntry),
-                                      ('/admin/entries.*', ListEntries),
-                                      ('/admin/assets/edit', EditAsset),
-                                      ('/admin/assets/delete', DeleteAsset),
-                                      ('/admin/assets.*', ListAssets),
-                                      ('/admin/pages/edit', EditPage),
-                                      ('/admin/pages/delete', DeletePage),
-                                      ('/admin/.*', ListPages)],
-                                     debug=True)
+        
+
+class ListAdminPages(MavRequestHandler):
+    def get_model_and_view(self):
+        p = {'headline' : "admin url mapping"}
+        content_list = ['<div><a href="%(url)s">%(url)s</a></div>' %
+                        {'url': a[0].replace('.*','')} for a in url_mapping] 
+        p['content'] = ''.join(content_list)
+        return ModelAndView(view='standard.html',
+                                model={'page': p})
+        
+url_mapping =[('/admin/entries/edit', EditEntry),
+              ('/admin/entries/delete', DeleteEntry),
+              ('/admin/entries.*', ListEntries),
+              ('/admin/assets/edit', EditAsset),
+              ('/admin/assets/delete', DeleteAsset),
+              ('/admin/assets.*', ListAssets),
+              ('/admin/pages/edit', EditPage),
+              ('/admin/pages/delete', DeletePage),
+              ('/admin/.*', ListAdminPages)]
+
+application = webapp.WSGIApplication(url_mapping, debug=True)
 
 def main():
     run_wsgi_app(application)
