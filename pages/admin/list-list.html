@@ -1,0 +1,19 @@
+{% extends "../base.html" %}
+
+{% block headline %}lists on mkomo.com{% endblock %}
+
+{% block content %}
+	<div><a href="/admin/lists/edit">add a new list</a></div>
+	<table>
+	{% for list in lists %}
+	    <tr>
+	    	<td>{{ list.id }}</td>
+	    	<td>
+		    	<a href="/admin/lists/edit?key={{ list.key }}">[edit]</a>
+		    	<a href="/admin/lists/delete?key={{ list.key }}"
+		    		onclick="return confirm('are you sure?')">[delete]</a>
+		    </td>
+	    </tr>
+	{% endfor %}
+	</table>
+{% endblock %}

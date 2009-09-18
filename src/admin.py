@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.db import djangoforms
 
-from src.mkomo import Page, Entry, Asset, ModelAndView, MavRequestHandler
+from src.mkomo import Page, Entry, Asset, List, ModelAndView, MavRequestHandler
 
 """*************************************************"""
 """******************** pages **********************"""
@@ -70,7 +70,6 @@ class EditPage(MavRequestHandler):
 class EntryForm(djangoforms.ModelForm):
   class Meta:
     model = Entry
-    exclude = ['tags']
     
     
 class ListEntries(MavRequestHandler):
@@ -115,6 +114,60 @@ class EditEntry(MavRequestHandler):
             entity = data.save()
             entity.put()
             self.redirect('/admin/entries')
+        else:
+            # Reprint the form
+            return self.get_model_and_view(data)
+
+"""*************************************************"""
+"""******************* lists ^^*********************"""
+"""*************************************************"""
+class ListForm(djangoforms.ModelForm):
+  class Meta:
+    model = List
+    
+    
+class ListLists(MavRequestHandler):
+    def get_model_and_view(self):
+        lists = List.all()
+        return ModelAndView(view='admin/list-list.html', 
+                            model={'lists': lists})
+   
+    
+class DeleteList(MavRequestHandler):
+    def get_model_and_view(self):
+        key = self.request.get('key')
+        list = List.get(key)
+        list.delete()
+        self.redirect('/admin/lists')
+        
+            
+class EditList(MavRequestHandler):
+    def get_model_and_view(self, list_form=None):
+        if list_form is None:
+            key = self.request.get('key')
+            if (len(key) > 0):
+                list_form = ListForm(instance=List.get(key))
+            else:
+                list_form = ListForm(instance=List())                
+        identifier = 'new list' if list_form.instance.id is None \
+                                else list_form.instance.id
+        return ModelAndView(view='admin/object-edit.html', 
+                            model={'object': list_form.instance,
+                                   'identifier': identifier,
+                                   'object_form': list_form})
+        
+    def post_model_and_view(self):        
+        key = self.request.get('key')
+        if (len(key) > 0):
+            list = List.get(key)
+        else:
+            list = List()
+        data = ListForm(data=self.request.POST, instance=list)
+        if data.is_valid():
+            # Save the data, and redirect to the view page
+            entity = data.save()
+            entity.put()
+            self.redirect('/admin/lists')
         else:
             # Reprint the form
             return self.get_model_and_view(data)
@@ -179,14 +232,18 @@ class ListAdminPages(MavRequestHandler):
         return ModelAndView(view='standard.html',
                                 model={'page': p})
         
-url_mapping =[('/admin/entries/edit', EditEntry),
+url_mapping =[('/admin/pages/edit', EditPage),
+              ('/admin/pages/delete', DeletePage),
+              ('/admin/pages.*', ListPages),
+              ('/admin/lists/edit', EditList),
+              ('/admin/lists/delete', DeleteList),
+              ('/admin/lists.*', ListLists),
+              ('/admin/entries/edit', EditEntry),
               ('/admin/entries/delete', DeleteEntry),
               ('/admin/entries.*', ListEntries),
               ('/admin/assets/edit', EditAsset),
               ('/admin/assets/delete', DeleteAsset),
               ('/admin/assets.*', ListAssets),
-              ('/admin/pages/edit', EditPage),
-              ('/admin/pages/delete', DeletePage),
               ('/admin/.*', ListAdminPages)]
 
 application = webapp.WSGIApplication(url_mapping, debug=True)

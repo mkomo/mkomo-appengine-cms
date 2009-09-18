@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block headline %}{{ list.headline }}{% endblock %}
+
+{% block content %}
+	{% if entries %}
+	    {% for entry in entries %}
+			<div class="entry">
+				<div class="entry-headline">
+					<a href="{{ entry.uri }}">{{ entry.headline }}</a>
+				</div>
+				<div class="entry-snippet">
+					{{ entry.content }}
+				</div> 
+			</div>
+		{% endfor %}
+	{% else %}
+		<p>there's nothing here yet.</p>
+	{% endif %}
+{% endblock %}
