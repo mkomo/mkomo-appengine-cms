@@ -3,14 +3,14 @@
 {% block headline %}{{ list.headline }}{% endblock %}
 
 {% block content %}
-	{% if entries %}
-	    {% for entry in entries %}
+	{% if pages %}
+	    {% for page in pages %}
 			<div class="entry">
 				<div class="entry-headline">
-					<a href="{{ entry.uri }}">{{ entry.headline }}</a>
+					<a href="{{ page.uri }}">{{ page.headline }}</a>
 				</div>
 				<div class="entry-snippet">
-					{{ entry.content }}
+					{{ page.content }}
 				</div> 
 			</div>
 		{% endfor %}
