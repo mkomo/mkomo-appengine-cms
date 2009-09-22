@@ -100,6 +100,20 @@ body {
 .content table.data .aright{
 	text-align: right;
 }
+.content .success-message{
+	margin: 8px;
+	border: 2px solid #139C01;
+	background-color: #b3f3ab;
+	padding: 8px;
+	font-weight: bold;
+}
+.content .failure-message{
+	margin: 8px;
+	border: 2px solid #BB0000;
+	background-color: #DD9999;
+	padding: 8px;
+	font-weight: bold;
+}
 /********************* story specific ********************/
 .content .entry {
 	margin: 4px;

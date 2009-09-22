@@ -17,6 +17,19 @@
 	width: 850px;
 }
 </style>
+<script type="text/javascript">
+isCtrl = false;
+document.onkeyup=function(e){
+	if(e.which == 17) isCtrl=false;
+}
+document.onkeydown=function(e){
+	if(e.which == 17) isCtrl=true;
+	if(e.which == 83 && isCtrl == true) {
+		document.editform.submit();
+		return false;
+	}
+}
+</script>
 {% endblock %}
 
 {% block container_type %}dynamic-width{% endblock %}
@@ -26,11 +39,17 @@
 {% endblock %}
 
 {% block content %}
+	{% if success %}
+		<div class="success-message">Object Saved Successfully</div>
+	{% endif %}
+	{% if failure %}
+		<div class="failure-message">Error Saving Object</div>
+	{% endif %}
 
 	{% if object.is_saved %}
 		<div>last updated: {{object.date_last_edited|date:"r"|lower}}</div>
 	{% endif %}
-	<form method="post">
+	<form method="post" name="editform">
 		<table class="edit-object">
 		{{object_form}}
 		</table>

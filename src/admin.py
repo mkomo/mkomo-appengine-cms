@@ -34,19 +34,23 @@ class DeletePage(MavRequestHandler):
         
             
 class EditPage(MavRequestHandler):
-    def get_model_and_view(self, page_form=None):
+    def get_model_and_view(self, page_form=None, success=False, failure=False):
         if page_form is None:
             key = self.request.get('key')
             if (len(key) > 0):
                 page_form = PageForm(instance=Page.get(key))
             else:
-                page_form = PageForm(instance=Page())                
+                page_form = PageForm(instance=Page())
+        else:
+            failure = True
         identifier = 'new page' if page_form.instance.uri is None \
                                 else page_form.instance.uri
         return ModelAndView(view='admin/object-edit.html', 
                             model={'object': page_form.instance,
                                    'identifier': identifier,
-                                   'object_form': page_form})
+                                   'object_form': page_form,
+                                   'success': success,
+                                   'failure': failure})
         
     def post_model_and_view(self):        
         key = self.request.get('key')
@@ -54,12 +58,14 @@ class EditPage(MavRequestHandler):
             page = Page.get(key)
         else:
             page = Page()
-        data = PageForm(data=self.request.POST, instance=page)
-        if data.is_valid():
+        page_form = PageForm(data=self.request.POST, instance=page)
+        if page_form.is_valid():
             # Save the data, and redirect to the view page
-            entity = data.save()
+            entity = page_form.save()
             entity.put()
-        return self.get_model_and_view()
+            return self.get_model_and_view(success=True)
+        else:
+            return self.get_model_and_view(page_form)
 
 """*************************************************"""
 """******************* lists ^^*********************"""
