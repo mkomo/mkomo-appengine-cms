@@ -71,7 +71,9 @@ body {
 .content .body p, .content .body ul{
 	margin: 4px 0 16px 0;
 }
-
+.content p.center{
+	text-align:center;
+}
 .content a{
 	color: #139c01;
 	text-decoration: none;
@@ -81,6 +83,22 @@ body {
 }
 .content .bold{
 	font-weight: bold;
+}
+.content table.data{
+	font-size: 11px;
+	margin: 0px auto 10px auto;
+	border: 1px solid #139C01;
+	width: 99%;
+	background-color: #b3f3ab;
+}
+.content table.data th{
+	font-size: 13px;
+	text-align: left;
+	background-color: #14ac00;
+	font-weight: bold;
+}
+.content table.data .aright{
+	text-align: right;
 }
 /********************* story specific ********************/
 .content .entry {
