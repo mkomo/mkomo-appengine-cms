@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.db import djangoforms
 
-from src.mkomo import Page, Entry, Asset, List, ModelAndView, MavRequestHandler
+from src.mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
 
 """*************************************************"""
 """******************** pages **********************"""
@@ -59,64 +59,7 @@ class EditPage(MavRequestHandler):
             # Save the data, and redirect to the view page
             entity = data.save()
             entity.put()
-            self.redirect('/admin/pages')
-        else:
-            # Reprint the form
-            return self.get_model_and_view(data)
-
-"""*************************************************"""
-"""******************* entries *********************"""
-"""*************************************************"""
-class EntryForm(djangoforms.ModelForm):
-  class Meta:
-    model = Entry
-    
-    
-class ListEntries(MavRequestHandler):
-    def get_model_and_view(self):
-        entries = Entry.all()
-        return ModelAndView(view='admin/entry-list.html', 
-                            model={'entries': entries})
-   
-    
-class DeleteEntry(MavRequestHandler):
-    def get_model_and_view(self):
-        key = self.request.get('key')
-        entry = Entry.get(key)
-        entry.delete()
-        self.redirect('/admin/entries')
-        
-            
-class EditEntry(MavRequestHandler):
-    def get_model_and_view(self, entry_form=None):
-        if entry_form is None:
-            key = self.request.get('key')
-            if (len(key) > 0):
-                entry_form = EntryForm(instance=Entry.get(key))
-            else:
-                entry_form = EntryForm(instance=Entry())                
-        identifier = 'new entry' if entry_form.instance.headline is None \
-                                else entry_form.instance.headline
-        return ModelAndView(view='admin/object-edit.html', 
-                            model={'object': entry_form.instance,
-                                   'identifier': identifier,
-                                   'object_form': entry_form})
-        
-    def post_model_and_view(self):        
-        key = self.request.get('key')
-        if (len(key) > 0):
-            entry = Entry.get(key)
-        else:
-            entry = Entry()
-        data = EntryForm(data=self.request.POST, instance=entry)
-        if data.is_valid():
-            # Save the data, and redirect to the view page
-            entity = data.save()
-            entity.put()
-            self.redirect('/admin/entries')
-        else:
-            # Reprint the form
-            return self.get_model_and_view(data)
+        return self.get_model_and_view()
 
 """*************************************************"""
 """******************* lists ^^*********************"""
@@ -238,9 +181,6 @@ url_mapping =[('/admin/pages/edit', EditPage),
               ('/admin/lists/edit', EditList),
               ('/admin/lists/delete', DeleteList),
               ('/admin/lists.*', ListLists),
-              ('/admin/entries/edit', EditEntry),
-              ('/admin/entries/delete', DeleteEntry),
-              ('/admin/entries.*', ListEntries),
               ('/admin/assets/edit', EditAsset),
               ('/admin/assets/delete', DeleteAsset),
               ('/admin/assets.*', ListAssets),

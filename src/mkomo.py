@@ -41,22 +41,23 @@ class MavRequestHandler(webapp.RequestHandler):
             model['is_admin'] = True
             model['logout_url'] = users.create_logout_url('/') 
         self.response.out.write(template.render(path, model))
-            
-            
-#class BasePage(db.Model):
-#    uri = db.StringProperty()
-#    title = db.StringProperty()
-#    description = db.StringProperty()
-#    keywords = db.StringProperty()
 
 class Page(db.Model):
     uri = db.StringProperty()
+    #html metadata
     title = db.StringProperty()
     description = db.StringProperty()
     keywords = db.StringProperty()
+    #html content
+    date = db.DateTimeProperty()
     headline = db.StringProperty()
+    snippet = db.TextProperty()
     content = db.TextProperty()
-    date_last_edited = db.DateTimeProperty(auto_now_add=True)
+    #organization
+    list_id = db.StringProperty()
+    precedence = db.FloatProperty(default=1.0)
+    date_last_edited = db.DateTimeProperty(auto_now=True)
+    is_public = db.BooleanProperty(default=False)
     
 
 class List(db.Model):
@@ -65,18 +66,6 @@ class List(db.Model):
     description = db.StringProperty()
     keywords = db.StringProperty()
     headline = db.StringProperty()
-
-
-class Entry(db.Model):
-    uri = db.StringProperty()
-    title = db.StringProperty()
-    description = db.StringProperty()
-    keywords = db.StringProperty()
-    list_id = db.StringProperty()
-    headline = db.StringProperty()
-    content = db.TextProperty()
-    date = db.DateTimeProperty(auto_now_add=True)
-    precedence = db.FloatProperty()
 
     
 class Asset(db.Model):
@@ -92,38 +81,21 @@ class StandardPage(MavRequestHandler):
             return ModelAndView(view='standard.html',
                                 model={'page': page})
         else:
+            return self.get_list()
+        
+    def get_list(self):
+        list_id = self.request.path[1:]
+        list = List.gql("where id=:1", list_id).get()
+        if list is None:
             raise NotFoundException
-
-  
-class ListPage(MavRequestHandler):
-    def get_model_and_view(self):
-        list_and_entry = self.request.path[3:].partition('/')
-        if len(list_and_entry[0]) == 0:
-            raise NotFoundException
-        elif len(list_and_entry[2]) == 0:
-            list_id = list_and_entry[0]
-            list = List.gql("where id=:1", list_id).get()
-            if list is None:
-                raise NotFoundException('There\'s no list with id "%s"'%list_id)
-            elif list_and_entry[1] != '/':
-                self.redirect('/m/%s/' % list_and_entry[0])
-                return
-            q = Entry.all()
-            q.filter('list_id =', list_id)
-            q.order('-precedence')
-            entries = q.fetch(100)
-            return ModelAndView(view='list.html',
-                                model={'list': list,
-                                       'entries': entries})
-        else:
-            list_id = list_and_entry[0]
-            uri = list_and_entry[2]
-            entry = Entry.gql("where list_id=:1 and uri=:2", list_id, uri).get()
-            if entry is None:
-                raise NotFoundException
-            return ModelAndView(view='standard.html',
-                                model={'page': entry})
-                
+        q = Page.all()
+        q.filter('list_id =', list_id)
+        q.order('-precedence')
+        pages = q.fetch(100)
+        return ModelAndView(view='list.html',
+                            model={'list': list,
+                                   'pages': pages})
+               
     
 class AssetRequestHandler(webapp.RequestHandler):
     def get(self):
@@ -137,7 +109,6 @@ class AssetRequestHandler(webapp.RequestHandler):
 
     
 application = webapp.WSGIApplication([('/assets/.*', AssetRequestHandler),
-                                      ('/m/.*', ListPage),
                                       ('/.*', StandardPage)],
                                      debug=True)
 
