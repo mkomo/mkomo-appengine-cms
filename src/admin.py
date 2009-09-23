@@ -34,15 +34,20 @@ class DeletePage(MavRequestHandler):
         
             
 class EditPage(MavRequestHandler):
-    def get_model_and_view(self, page_form=None, success=False, failure=False):
-        if page_form is None:
+    def get_model_and_view(self, page_form=None, key=None):
+        success, failure = False, False
+        if page_form is not None:
+            failure = True
+        elif key is not None:
+            success = True
+            page_form = PageForm(instance=Page.get(key))
+        else:
             key = self.request.get('key')
             if (len(key) > 0):
                 page_form = PageForm(instance=Page.get(key))
             else:
                 page_form = PageForm(instance=Page())
-        else:
-            failure = True
+
         identifier = 'new page' if page_form.instance.uri is None \
                                 else page_form.instance.uri
         return ModelAndView(view='admin/object-edit.html', 
@@ -63,7 +68,7 @@ class EditPage(MavRequestHandler):
             # Save the data, and redirect to the view page
             entity = page_form.save()
             entity.put()
-            return self.get_model_and_view(success=True)
+            return self.get_model_and_view(key=entity.key())
         else:
             return self.get_model_and_view(page_form)
 
