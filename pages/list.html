@@ -7,10 +7,18 @@
 	    {% for page in pages %}
 			<div class="entry">
 				<div class="entry-headline">
-					<a href="{{ page.uri }}">{{ page.headline }}</a>
+					{% if page.uri %} 
+						<a href="{{ page.uri }}">{{ page.headline }}</a>
+					{% else %}
+						{{ page.headline }}
+					{% endif %}
 				</div>
 				<div class="entry-snippet">
-					{{ page.content }}
+					{% if page.snippet %} 
+						{{ page.snippet }}
+					{% else %}
+						{{ page.content }}
+					{% endif %}
 				</div> 
 			</div>
 		{% endfor %}
