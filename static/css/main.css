@@ -1,5 +1,5 @@
 body {
-	font-family: Verdana, Helvetica, sans-serif;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	background: #14ac00 url(/static/img/background.png) repeat scroll 50% 19px
 }
 /*container (width restriction)*/
@@ -7,7 +7,7 @@ body {
 	margin: 10px auto;
 }
 .container.fixed-width{
-	width: 46em;	
+	width: 736px;	
 }
 .container.dynamic-width{
 	width: 95%;	
@@ -19,7 +19,7 @@ body {
 	padding: 0;
 }
 .header .title{
-	font-size: 4em;	
+	font-size: 57px;	
 	color: #0f3f09;
 	display: block;
 	width: 400px;
@@ -31,10 +31,11 @@ body {
 }
 .header .nav{
 	float: right;
+	background-color: rgb(147,229,137); /* fallback for ff2,op9 */
 	background-color: rgba(179,243,171,0.8);
 	margin: 15px 0 0 0;
 	padding: 5px 15px 5px 15px;
-	font-size: 1.8em;
+	font-size: 28px;
 }
 .header .nav span.selected{
 	font-weight: bold;
@@ -48,15 +49,17 @@ body {
 }
 /*content container*/
 .content-container{
+	background-color: rgb(17,153,0); /* The Fallback */
 	background-color: rgba(13,108,0,0.4);
 	padding: 10px;	
 }
 .content{
+	background-color: rgb(231,244,229); /* The Fallback */
 	background-color: rgba(255,255,255,0.9);
 	padding: 5px 10px 10px 10px;
 }
 .content .title{
-	font-size: 1.8em;
+	font-size: 28px;
 	border-bottom: 1px solid #b3f3ab;
 }
 .content .body{
@@ -65,7 +68,7 @@ body {
 .content .body h2{
 	margin: 0;
 	padding: 0;
-	font-size: 1.2em;
+	font-size: 19px;
 	font-weight: bold;
 }
 .content .body p, .content .body ul{
@@ -113,6 +116,12 @@ body {
 	background-color: #DD9999;
 	padding: 8px;
 	font-weight: bold;
+}
+.content .right-img{
+	border: 1px solid rgb(20, 172, 0); 
+	padding: 2px; 
+	float: right; 
+	margin-left: 7px;
 }
 /********************* story specific ********************/
 .content .entry {

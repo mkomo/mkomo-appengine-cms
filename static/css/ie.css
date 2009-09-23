@@ -17,3 +17,6 @@
 .content *{
 	filter: alpha(opacity=100);
 }
+.content .body ul{
+	margin-left: 12px;
+}
