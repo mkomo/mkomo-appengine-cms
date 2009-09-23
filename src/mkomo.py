@@ -77,7 +77,7 @@ class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
         uri = self.request.path
         page = Page.gql("where uri=:1", uri).get()
-        if page is not None:
+        if page is not None and (page.is_public() or users.is_current_user_admin()):
             return ModelAndView(view='standard.html',
                                 model={'page': page})
         else:
@@ -90,6 +90,8 @@ class StandardPage(MavRequestHandler):
             raise NotFoundException
         q = Page.all()
         q.filter('list_id =', list_id)
+        if not users.is_current_user_admin():
+	        q.filter('is_public',True)
         q.order('-precedence')
         pages = q.fetch(100)
         return ModelAndView(view='list.html',
