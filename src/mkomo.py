@@ -77,7 +77,7 @@ class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
         uri = self.request.path
         page = Page.gql("where uri=:1", uri).get()
-        if page is not None and (page.is_public() or users.is_current_user_admin()):
+        if page is not None and (page.is_public or users.is_current_user_admin()):
             return ModelAndView(view='standard.html',
                                 model={'page': page})
         else:
