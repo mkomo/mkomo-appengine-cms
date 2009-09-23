@@ -53,6 +53,16 @@ class Page(db.Model):
     headline = db.StringProperty()
     snippet = db.TextProperty()
     content = db.TextProperty()
+    def get_snippet(self):
+        if self.snippet:
+            return self.snippet
+        else:
+            break_text = '<br id="break"/>'
+            index_of_break = self.content.find(break_text)
+            if index_of_break < 0:
+                return None
+            else:
+                return self.content[0:index_of_break]
     #organization
     list_id = db.StringProperty()
     precedence = db.FloatProperty(default=1.0)

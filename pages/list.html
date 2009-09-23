@@ -14,8 +14,11 @@
 					{% endif %}
 				</div>
 				<div class="entry-snippet">
-					{% if page.snippet %} 
-						{{ page.snippet }}
+					{% if page.get_snippet %} 
+						{{ page.get_snippet }}
+						{% if page.uri %} 
+							<a href="{{ page.uri }}">{read more}</a>
+						{% endif %}
 					{% else %}
 						{{ page.content }}
 					{% endif %}
