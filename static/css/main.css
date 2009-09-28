@@ -74,7 +74,7 @@ body {
 .content .body p, .content .body ul{
 	margin: 4px 0 16px 0;
 }
-.content p.center{
+.content .center{
 	text-align:center;
 }
 .content a{
@@ -126,7 +126,8 @@ body {
 /********************* story specific ********************/
 .content .entry {
 	margin: 4px;
-	padding: 4px;
+	border-bottom: 1px solid #b3f3ab;
+	padding: 4px 4px 10px 4px;
 }
 .entry .entry-headline{
 	font-size: 1.1em;

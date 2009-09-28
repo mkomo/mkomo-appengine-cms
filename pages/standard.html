@@ -15,6 +15,9 @@
 {% block headline %}{{page.headline}}{% endblock %}
 
 {% block content %}
+	{% if not page.is_public %}
+		<div class="failure-message">This page is not public</div>
+	{% endif %}
 	{{page.content}}
 	{% if is_admin %}
 		<a href="/admin/pages/edit?key={{ page.key }}">[edit]</a>
