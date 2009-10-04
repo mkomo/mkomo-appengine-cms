@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.db import djangoforms
 
-from src.mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
+from mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
 
 """*************************************************"""
 """******************** pages **********************"""
@@ -146,13 +146,12 @@ class DeleteAsset(MavRequestHandler):
         
             
 class EditAsset(MavRequestHandler):
-    def get_model_and_view(self, asset_form=None):
-        if asset_form is None:
-            key = self.request.get('key')
-            if (len(key) > 0):
-                uri = Asset.get(key).uri
-            else:
-                uri = ''
+    def get_model_and_view(self):
+        key = self.request.get('key')
+        if (len(key) > 0):
+            uri = Asset.get(key).uri
+        else:
+            uri = ''
         identifier = 'new asset' if uri == '' \
                                 else uri
         return ModelAndView(view='admin/edit-asset.html', 
@@ -174,7 +173,7 @@ class EditAsset(MavRequestHandler):
             self.redirect('/admin/assets')
         else:
             # Reprint the form
-            return self.get_model_and_view(data)
+            return self.get_model_and_view()
         
 
 class ListAdminPages(MavRequestHandler):
