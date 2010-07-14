@@ -7,7 +7,11 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.db import djangoforms
 
-from mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
+try:
+  from mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
+except ImportError:
+  from src.mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
+
 
 """*************************************************"""
 """******************** pages **********************"""
@@ -44,9 +48,13 @@ class EditPage(MavRequestHandler):
         else:
             key = self.request.get('key')
             if (len(key) > 0):
-                page_form = PageForm(instance=Page.get(key))
+                page = Page.get(key)
             else:
-                page_form = PageForm(instance=Page())
+                page = Page()
+                uri = self.request.get('uri')
+                if len(uri) > 0:
+                    page.uri = uri
+            page_form = PageForm(instance=page)
 
         identifier = 'new page' if page_form.instance.uri is None \
                                 else page_form.instance.uri
