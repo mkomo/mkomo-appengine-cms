@@ -140,3 +140,14 @@ body {
 .clear {
 	clear: both;
 }
+.footer {
+	color: rgba(255, 255, 255, 0.898);
+	text-align: center;
+}
+.footer a {
+	color: rgb(179, 243, 171);
+	text-decoration: none;
+}
+.footer a:hover {
+	text-decoration: underline;
+}

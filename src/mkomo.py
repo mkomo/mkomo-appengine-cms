@@ -27,7 +27,8 @@ class MavRequestHandler(webapp.RequestHandler):
         except NotFoundException, ex:
             self.response.set_status(404)
             self.render(ModelAndView(view='error.html',
-                                model={'message': ex.message}))
+                                model={'message': ex.message,
+                                       'uri': self.request.path}))
     
     def post(self):
         mav = self.post_model_and_view()

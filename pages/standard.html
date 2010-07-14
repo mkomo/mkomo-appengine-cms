@@ -19,7 +19,7 @@
 		<div class="failure-message">This page is not public</div>
 	{% endif %}
 	{{page.content}}
-	{% if is_admin %}
-		<a href="/admin/pages/edit?key={{ page.key }}">[edit]</a>
-	{% endif %}
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
