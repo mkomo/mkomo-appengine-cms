@@ -15,7 +15,7 @@
 {% block headline %}{{page.headline}}{% endblock %}
 
 {% block content %}
-	{% if not page.is_public %}
+	{% if not page.static and not page.is_public %}
 		<div class="failure-message">This page is not public</div>
 	{% endif %}
 	{{page.content}}

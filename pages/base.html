@@ -33,12 +33,15 @@
 			</div>
 		</div>
 		<div class="footer">
-			<a href="/about">contact</a>
+			{% if not is_admin %}
+				<a href="/about">contact</a>
+			{% endif %}
 			{% if is_admin %}
-				| <a href="{{logout_url}}">logout</a>
-				{% if page %}
+				<a href="{{logout_url}}">logout</a>
+				{% if page and not page.static %}
 					| <a href="/admin/pages/edit?key={{ page.key }}">edit</a>
-				{% endif %}{% if uri %}
+				{% endif %}
+				{% if uri %}
 					| <a href="/admin/pages/edit?uri={{uri}}">create</a>
 				{% endif %}
 			{% endif %}

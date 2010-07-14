@@ -186,10 +186,12 @@ class EditAsset(MavRequestHandler):
 
 class ListAdminPages(MavRequestHandler):
     def get_model_and_view(self):
-        p = {'headline' : "admin url mapping"}
         content_list = ['<div><a href="%(url)s">%(url)s</a></div>' %
-                        {'url': a[0].replace('.*','')} for a in url_mapping] 
-        p['content'] = ''.join(content_list)
+                        {'url': a[0].replace('.*','')} for a in url_mapping]
+        
+        p = {'headline' : "admin url mapping",
+             'content' : ''.join(content_list),
+             'static' : True}
         return ModelAndView(view='standard.html',
                                 model={'page': p})
         
