@@ -36,7 +36,7 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(mav)
             
     def render(self, mav):
-        path = os.path.join(os.path.abspath('..'), 'pages', mav.view)
+        path = os.path.join(os.path.abspath('.'), 'src', 'pages', mav.view)
         model = mav.model
         if users.is_current_user_admin():
             model['is_admin'] = True
