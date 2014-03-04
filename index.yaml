@@ -16,3 +16,9 @@ indexes:
     direction: desc
   - name: __key__
     direction: desc
+
+- kind: Page
+  properties:
+  - name: list_id
+  - name: precedence
+    direction: desc
