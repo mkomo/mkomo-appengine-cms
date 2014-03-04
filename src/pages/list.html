@@ -15,12 +15,12 @@
 				</div>
 				<div class="entry-snippet">
 					{% if page.get_snippet %} 
-						{{ page.get_snippet }}
+						{{ page.get_snippet|safe }}
 						{% if page.uri %} 
 							<a href="{{ page.uri }}">[read&nbsp;more]</a>
 						{% endif %}
 					{% else %}
-						{{ page.content }}
+						{{ page.content|safe }}
 					{% endif %}
 					<div class="clear"></div>
 				</div> 

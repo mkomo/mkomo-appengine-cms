@@ -18,7 +18,7 @@
 	{% if not page.static and not page.is_public %}
 		<div class="failure-message">This page is not public</div>
 	{% endif %}
-	{{page.content}}
+	{{page.content|safe}}
 {% endblock %}
 
 {% block footer %}

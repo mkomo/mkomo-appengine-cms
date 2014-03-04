@@ -56,7 +56,7 @@ document.onkeydown=function(e){
 	{% endif %}
 	<form method="post" name="editform">
 		<table class="edit-object">
-		{{object_form}}
+		{{object_form|safe}}
 		</table>
 		{% if object.is_saved %}
 		<input type="hidden" name="key" value="{{ object.key }}"/>
