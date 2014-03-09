@@ -121,6 +121,15 @@ body {
 	padding: 8px;
 	font-weight: bold;
 }
+
+.content .note{
+	margin: 8px;
+	border: 1px solid #139C01;
+	background-color: #b3f3ab;
+	padding: 8px;
+	font-style: italic;
+}
+
 .content .failure-message{
 	margin: 8px;
 	border: 2px solid #BB0000;
