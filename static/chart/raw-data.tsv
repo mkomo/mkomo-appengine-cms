@@ -275,3 +275,13 @@ dateDecimal	date	driveInfo	sizeInMb	sizeInGb	cost	dollarsPerGb	predictedDollarsP
 2008.64	2008 July 20	Hitachi - DeskStar 750GB Internal Hard Drive Model OA34914 SKU: 8295793	750000	750.000	133.99	0.18	0.14	-0.75	-0.86
 2008.64	2008 July 20	Western Digital - Caviar GP 500GB Internal Hard Drive Model: WD5000CSRTL SKU: 8682311	500000	500.000	89.99	0.18	0.14	-0.74	-0.86
 2009.50	2009 July 24	HITACHI 0A38016 7200 RPM SATA 3.0Gb/s	1000000	1000.000	74.99	0.07	0.08	-1.15	-1.08
+2010.08	2010 January 2	Hitachi 1 TB Deskstar SATA 7200 RPM 32 MB Cache Internal Hard Drive HD31000 IDK/7K	1000000	1000.000	69.99	0.07	0.06	-1.15	-1.22
+2010.74	2010 August 31	Seagate Barracuda 7200.11 ST31500341AS 1.5TB 7200 RPM SATA 3.0Gb/s 3.5" Internal Hard Drive	1500000	1500.000	84.99	0.06	0.04	-1.25	-1.39
+2010.74	2010 August 31	Western Digital Caviar Green WD20EARS 2TB SATA 3.0Gb/s 3.5" Internal Hard Drive -Bare Drive	2000000	2000.000	119.99	0.06	0.04	-1.22	-1.39
+2011.26	2011 March 8	Seagate Barracuda 7200.11 ST31500341AS 1.5TB 7200 RPM SATA 3.0Gb/s 3.5" Internal Hard Drive -Bare Drive	1500000	1500.000	69.99	0.05	0.03	-1.33	-1.52
+2011.26	2011 March 8	Western Digital Caviar Green WD20EARS 2TB SATA 3.0Gb/s 3.5" Internal Hard Drive -Bare Drive	2000000	2000.000	79.99	0.04	0.03	-1.4	-1.52
+2012.29	2012 March 19	Seagate Barracuda Green 2TB SATA 6Gb/s 64MB Cache 3.5-Inch Internal Bare Drive ST2000DL003	2000000	2000.000	94.99	0.05	0.02	-1.32	-1.78
+2013.29	2013 March 17	Seagate Barracuda 2 TB HDD SATA 6 Gb/s NCQ 64MB Cache 3.5-Inch Internal Bare Drive ST2000DM001	2000000	2000.000	74.99	0.04	0.01	-1.43	-2.02
+2013.29	2013 March 17	WD Red 3 TB NAS Hard Drive: 3.5 Inch, SATA III, 64 MB Cache - WD30EFRX	3000000	3000.000	159.91	0.05	0.01	-1.27	-2.02
+2014.25	2014 March 4	TOSHIBA DT01ACA300 3TB 7200 RPM 64MB Cache SATA 6.0Gb/s 3.5" Internal Hard Drive Bare Drive	3000000	3000.000	99.99	0.03	0.01	-1.48	-2.27
+2014.25	2014 March 4	Western Digital WD Green WD20EZRX 2TB IntelliPower 64MB Cache SATA 6.0Gb/s 3.5" Internal Hard Drive Bare Drive	2000000	2000.000	89.99	0.04	0.01	-1.35	-2.27
