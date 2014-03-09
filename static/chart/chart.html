@@ -17,10 +17,18 @@ body {
   stroke: #000;
 }
 
+div.tooltip {
+  position: absolute;
+  padding: 5px 10px;
+  font: 12px sans-serif;
+  background: #d5deed;
+  border: 0px;
+  border-radius: 4px;
+  pointer-events: none;
+}
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.js"></script>
-<!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
 var margin = {top: 20, right: 20, bottom: 30, left: 80},
@@ -52,11 +60,9 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.tsv("raw-data.tsv", function(error, data) {
-  console.log(data);
   data.forEach(function(d) {
     d.dateDecimal = +d.dateDecimal;
     d.dollarsPerGb = +d.dollarsPerGb;
-    //console.log(d);
   });
   x.domain(d3.extent(data, function(d) { return d.dateDecimal; })).nice();
   y.domain(d3.extent(data, function(d) { return d.dollarsPerGb; })).nice();
@@ -69,7 +75,7 @@ d3.tsv("raw-data.tsv", function(error, data) {
       .attr("class", "label")
       .attr("x", width)
       .attr("y", -6)
-      .style("text-anchor", "end")
+      .style("text-anchor", "end");
       // .text("Sepal Width (cm)");
 
   svg.append("g")
@@ -81,7 +87,31 @@ d3.tsv("raw-data.tsv", function(error, data) {
       .attr("y", 6)
       .attr("dy", "1.71em")
       .style("text-anchor", "end")
-      //.text("Sepal Length (cm)")
+  var costFormat = function(cost){
+    if (cost && !isNaN(cost) && cost != 0){
+      return d3.format("$,.2f")(cost);
+    } else {
+      return '';
+    }
+  }
+  var sizeFormat = function(sizeInMb){
+    var fmt = function(n) {
+      if (n < 10) return d3.format(",.1f")(n);
+      else return d3.format(",.0f")(n)
+    };
+    if (!sizeInMb || isNaN(sizeInMb) || sizeInMb == 0){
+      return "[unknown size]";
+    } else if (sizeInMb >= 1000000) {
+      return fmt(sizeInMb/1000000) + "TB";
+    } else if (sizeInMb >= 1000) {
+      return fmt(sizeInMb/1000) + "GB";
+    } else {
+      return fmt(sizeInMb) + "MB"
+    }
+  };
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
   svg.selectAll(".dot")
       .data(data)
@@ -90,7 +120,23 @@ d3.tsv("raw-data.tsv", function(error, data) {
       .attr("r", 3.5)
       .attr("cx", function(d) { return x(d.dateDecimal); })
       .attr("cy", function(d) { return y(d.dollarsPerGb); })
-      .style("fill", function(d) { return color(d.species); });
+      .style("fill", function(d) { return color(Math.floor(Math.log(d.sizeInMb)/Math.log(1000))); })
+      .on("mouseover", function(d) {
+            div.transition()
+              .duration(200)
+              .style("opacity", .9);
+            div .html(d.date + "<br/>" +
+                sizeFormat(d.sizeInMb) + "<br/>" +
+                costFormat(d.cost) + "<br/>" +
+                d3.format("$,.2f")(d.dollarsPerGb) + " per GB")
+              .style("left", (d3.event.pageX) + "px")
+              .style("top", (d3.event.pageY - 28) + "px");
+            })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });;
 
 });
 
