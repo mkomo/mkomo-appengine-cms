@@ -1,4 +1,4 @@
-dateDecimal	Date	Drive info	Size in MB	Size in GB	Cost	dollarsPerGb	predicted $/gb	log cost/gb	predicted log cost/gb
+dateDecimal	date	driveInfo	sizeInMb	sizeInGb	cost	dollarsPerGb	predictedDollarsPerGb	logCostPerGb	predictedLogCostPerGb
 1980.00	1980 January	Morrow Designs	26	0.026	5000.00	193000.00	1974730.74	5.29	6.3
 1980.50	1980 July	North Star	18	0.018	4199.00	233000.00	1480897.96	5.37	6.17
 1981.67	1981 September	Apple	5	0.005	3500.00	700000.00	756656.41	5.85	5.88
