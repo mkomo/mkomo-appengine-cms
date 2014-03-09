@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<link type="text/css" rel="stylesheet" href="/static/css/main.css" />
-<style>
+{% extends "admin/base.html" %}
 
+{% block head_supplement %}
+<style>
 .axis path,
 .axis line {
   fill: none;
@@ -52,11 +51,11 @@ div.tooltip {
   color: #bbe5b5;
 }
 </style>
-<body>
-<div class="container fixed-width">
-<div class="content-container">
-<div class="content">
-    <div class="title">a history of storage cost</div>
+{% endblock %}
+
+{% block headline %}a history of storage cost (update){% endblock %}
+
+{% block content %}
     <div class="subtitle">article updated March 9, 2014</div>
     <div id="chart-container-container">
         <div class="content-container" id="chart-container">
@@ -65,7 +64,7 @@ div.tooltip {
         </div>
     </div>
     <p>
-      IT'S BEEN almost five years since I first looked at the <a href="#entry-1">history of hard drive cost</a>, and a lot has changed in the market. The most salient change is that, on average, drives are no longer getting bigger. For a long time, one of the driving factors in consumer hard drive innovation was the need for more space, and that simply isn’t a huge force anymore. Increasingly, we're focusing our attentions on speed, reliability, and accessibility. There are several external forces that have shifted the focus away from the mantra of <b>"more space cheaper"</b>, and it’s hard to imagine the industry ever pivoting back.
+      IT'S BEEN almost five years since I first looked at the <a href="/cost-per-gigabyte">history of hard drive cost</a>, and a lot has changed in the market. The most salient change is that, on average, drives are no longer getting bigger. For a long time, one of the driving factors in consumer hard drive innovation was the need for more space, and that simply isn’t a huge force anymore. Increasingly, we're focusing our attentions on speed, reliability, and accessibility. There are several external forces that have shifted the focus away from the mantra of <b>"more space cheaper"</b>, and it’s hard to imagine the industry ever pivoting back.
     </p>
     <h3>we've stopped all the downloadin'</h3>
     <p>
@@ -83,9 +82,6 @@ div.tooltip {
     <p>
       With the introduction of super-fast drives, the focus has turned away from commodity disks and towards advancements in speed that improve the end user’s quality of life. As our digital lives become more web-centric, we have less to store but we want to get what we do store faster. Solid state drives offer a more responsive experience and, since we’re less reliant on local storage, we’re willing to make the speed vs. space tradeoff.
     </p>
-</div>
-</div>
-</div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
@@ -117,7 +113,7 @@ var svg = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("raw-data.tsv", function(error, data) {
+d3.tsv("/static/chart/raw-data.tsv", function(error, data) {
   data.forEach(function(d) {
     d.dateDecimal = +d.dateDecimal;
     d.dollarsPerGb = +d.dollarsPerGb;
@@ -206,4 +202,5 @@ d3.tsv("raw-data.tsv", function(error, data) {
 });
 
 </script>
-</body>
+
+{% endblock %}

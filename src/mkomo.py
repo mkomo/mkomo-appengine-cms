@@ -78,12 +78,12 @@ class List(db.Model):
     keywords = db.StringProperty()
     headline = db.StringProperty()
 
-    
+
 class Asset(db.Model):
     uri = db.StringProperty()
     payload = db.BlobProperty()
 
-    
+
 class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
         uri = self.request.path
@@ -102,14 +102,22 @@ class StandardPage(MavRequestHandler):
         q = Page.all()
         q.filter('list_id =', list_id)
         if not users.is_current_user_admin():
-	        q.filter('is_public',True)
+            q.filter('is_public',True)
         q.order('-precedence')
         pages = q.fetch(100)
         return ModelAndView(view='list.html',
                             model={'list': list,
                                    'pages': pages})
-               
-    
+
+
+class PageCostPerGigabyte(MavRequestHandler):
+    def get_model_and_view(self):
+        uri = self.request.path
+        page = Page.gql("where uri=:1", uri).get()
+        return ModelAndView(view='cost-per-gigabyte.html',
+                            model={'page': page})
+
+
 class AssetRequestHandler(webapp.RequestHandler):
     def get(self):
         uri = self.request.path[8:]
@@ -120,8 +128,8 @@ class AssetRequestHandler(webapp.RequestHandler):
         else:
             self.error(404)
 
-    
 application = webapp.WSGIApplication([('/assets/.*', AssetRequestHandler),
+                                      ('/cost-per-gigabyte-update', PageCostPerGigabyte),
                                       ('/.*', StandardPage)],
                                      debug=True)
 
