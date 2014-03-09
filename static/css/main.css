@@ -62,6 +62,12 @@ body {
 	font-size: 28px;
 	border-bottom: 1px solid #b3f3ab;
 }
+
+.content .subtitle {
+	font-size: 12px;
+	padding: 4px 0;
+    color: #093304;
+}
 .content .body{
 	padding: 3px 3px;
 }
@@ -71,8 +77,13 @@ body {
 	font-size: 19px;
 	font-weight: bold;
 }
-.content .body p, .content .body ul{
-	margin: 4px 0 16px 0;
+.content h3{
+	margin: 0;
+	padding: 0;
+    color: #093304;
+}
+.content p, .content .body ul{
+	margin: 4px 16px 16px 4px;
 }
 .content .center{
 	text-align:center;
