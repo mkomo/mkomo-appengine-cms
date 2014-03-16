@@ -1,18 +1,18 @@
 body {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	background: #14ac00 url(/static/img/background.png) repeat scroll 50% 19px
+	background: #14ac00 url(/static/img/background.png) repeat scroll 50% 19px;
+	line-height: 1.42857143;
 }
 /*container (width restriction)*/
 .container{
 	margin: 10px auto;
 }
 .container.fixed-width{
-	width: 736px;	
+	max-width: 736px;
 }
 .container.dynamic-width{
 	width: 95%;	
 }
-
 /*page header*/
 .header {
 	margin: 0 10px 2px 10px;
@@ -22,33 +22,84 @@ body {
 	font-size: 57px;	
 	color: #0f3f09;
 	display: block;
-	width: 400px;
+	float: left;
 	height: 80px;
 	text-decoration: none;
 }
 .header .title img{
 	border: 0;
 }
-.header .nav{
+
+.nav{
+	list-style: none;
 	float: right;
-	background-color: rgb(147,229,137); /* fallback for ff2,op9 */
-	background-color: rgba(179,243,171,0.8);
-	margin: 15px 0 0 0;
+	margin: 0;
 	padding: 5px 15px 5px 15px;
 	font-size: 28px;
 }
-.header .nav span.selected{
-	font-weight: bold;
+
+.nav li {
+	float:left;
+	position: relative;
+	display: block;
 }
-.header .nav a{
+.nav li a {
+	border-radius: 4px;
+	font-size: 28px;
+	padding: 0px 15px;
+	margin: 15px 4px 0 0;
+	background-color: rgba(179,243,171,0.8);
 	color: #0f3f09;
 	text-decoration: none;
+	position: relative;
+	display: block;
 }
-.header .nav a:hover{
-	text-decoration: underline;
+
+.nav a:hover{
+	background-color: #fff;
 }
+
+@media screen and (max-width: 730px) {
+	.header .title img{
+		width: 100%;
+	}
+}
+@media screen and (max-width: 730px) {
+	body {
+		margin: 8px 0px;
+	}
+	.header {
+		margin: 0;
+		padding: 0;
+	}
+	.nav {
+		clear: both;
+		float: none;
+		padding: 0px 15px;
+		background-color: rgba(179,243,171,0.8);
+	}
+
+	.nav li {
+		float:none;
+		position: relative;
+		display: inline-block;
+	}
+	.nav li a {
+		border-radius: 0px;
+		font-size: 28px;
+		padding: 0px 15px;
+		margin: 0;
+		background-color: rgba(179,243,171,0.8);
+		color: #0f3f09;
+		text-decoration: none;
+		position: relative;	
+		display: block;
+	}
+}
+
 /*content container*/
 .content-container{
+	clear: both;
 	background-color: rgb(17,153,0); /* The Fallback */
 	background-color: rgba(13,108,0,0.4);
 	padding: 10px;	
@@ -58,15 +109,18 @@ body {
 	background-color: rgba(255,255,255,0.9);
 	padding: 5px 10px 10px 10px;
 }
-.content .title{
+
+.content h2 {
 	font-size: 28px;
+	font-weight: normal;
 	border-bottom: 1px solid #b3f3ab;
+	margin: 0px;
 }
 
 .content .subtitle {
 	font-size: 12px;
 	padding: 4px 0;
-    color: #093304;
+	color: #093304;
 }
 .content .body{
 	padding: 3px 3px;
