@@ -4,204 +4,221 @@
 <style>
 .axis path,
 .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
 }
 
 .dot {
-  stroke: #000;
+	stroke: #000;
 }
 
 div.tooltip {
-  position: absolute;
-  padding: 5px 10px;
-  font: 12px sans-serif;
-  background: #bbe5b5;
-  border: 0px;
-  border-radius: 4px;
-  pointer-events: none;
+	position: absolute;
+	padding: 5px 10px;
+	font: 12px sans-serif;
+	background: #bbe5b5;
+	border: 0px;
+	border-radius: 4px;
+	pointer-events: none;
 }
+
 #chart {
-  font: 10px sans-serif;
-  display: inline-block;
-  background-color: #f3f8f3;
-  padding: 5px 10px 10px 10px;
+	width: 960px;
+	font: 10px sans-serif;
+	background-color: #f3f8f3;
 }
 #chart-container {
-    display: inline-block;
-    padding: 10px;
-    position: absolute;
-    margin: 10px -500px;
-    left: 50%;
-    background-color: rgba(13,108,0,0.9);
-    width: 980px;
-}
-#chart-container-container {
-    position: relative;
-    height: 560px;
-    margin-bottom: 40px;
+	padding: 10px;
+	margin: 0 calc(50% - 490px);
+	margin-bottom: 20px;
+	background-color: rgba(13,108,0,0.9);
 }
 #chart-caption {
-    color: #FFF;
-    padding: 5px 2px 0px 2px;
-    font-size: 11px;
+	color: #FFF;
+	padding: 5px 2px 0px 2px;
+	font-size: 11px;
 }
 #chart-caption a {
-  color: #bbe5b5;
+	color: #bbe5b5;
 }
+
+
+@media screen and (max-width: 1000px) {
+	#chart {
+		width: 100%;
+	}
+
+	#chart-container {
+		margin: 0 auto 20px auto;
+	}
+}
+
 </style>
 {% endblock %}
 
 {% block headline %}a history of storage cost (update){% endblock %}
 
 {% block content %}
-    <div class="subtitle">article updated March 9, 2014</div>
-    <div id="chart-container-container">
-        <div class="content-container" id="chart-container">
-            <div id="chart"> </div>
-            <div id="chart-caption">Chart Last Updated: March 9, 2014 - This graph of hard drive cost, plotted on a logarithmic scale, shows the precipitous drop in prices that occurred over 35 years of innovation and increasing demand. Roll your cursor over each datapoint to see more information. Static versions of this image are also available: <a href="/assets/cost-per-gigabyte-small.png">small</a>, <a href="/assets/cost-per-gigabyte-large.png">large</a>. Read below for sources.</div>
-        </div>
-    </div>
-    <p>
-      IT'S BEEN almost five years since I first looked at the <a href="/cost-per-gigabyte">history of hard drive cost</a>, and a lot has changed in the market. The most salient change is that, on average, drives are no longer getting bigger. For a long time, one of the driving factors in consumer hard drive innovation was the need for more space, and that simply isn’t a huge force anymore. Increasingly, we're focusing our attentions on speed, reliability, and accessibility. There are several external forces that have shifted the focus away from the mantra of <b>"more space cheaper"</b>, and it’s hard to imagine the industry ever pivoting back.
-    </p>
-    <h3>we've stopped all the downloadin'</h3>
-    <p>
-      When it comes to the decline in storage needs, the elephant in the room is the precipitous decline in media dowloads, illegal or otherwise. Services like Pandora, Netflix, and Amazon Instant Video are supplanting caches of downloaded music and movies, and making it easier for consumers to manage their media catalogs.
-    </p>
-    <h3>the cloud</h3>
-    <p>
-      For reliable storage of personal files, consumers are increasingly turning towards the internet.  Services like Dropbox, Google Drive, and Amazon Cloud Storage are making it easier for people to not only backup documents and photos, but also share across multiple devices. These services also provide redundant storage and, as with the streaming services mentioned above, make our lives simpler and less prone to catastrophic loss.
-    </p>
-    <h3>the fall of the desktop (and the laptop for that matter)</h3>
-    <p>
-      As smartphones and tablets become more integrated into our lives, we are seeing much less reliance on personal computers as the single point of access for digital content. This makes a monolithic hard drive in a home office feel less like home-sweet-home and more like an inconvenience.
-    </p>
-    <h3>solid state drives</h3>
-    <p>
-      With the introduction of super-fast drives, the focus has turned away from commodity disks and towards advancements in speed that improve the end user’s quality of life. As our digital lives become more web-centric, we have less to store but we want to get what we do store faster. Solid state drives offer a more responsive experience and, since we’re less reliant on local storage, we’re willing to make the speed vs. space tradeoff.
-    </p>
-    <div class="note"><b>note:</b> more information about the data and method is available at the original <a href="/cost-per-gigabyte">history of hard drive cost</a> page.</div>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+		<div class="subtitle">article updated March 9, 2014</div>
+			<div class="content-container" id="chart-container">
+					<div id="chart"> </div>
+					<div id="chart-caption">Chart Last Updated: March 9, 2014 - This graph of hard drive cost, plotted on a logarithmic scale, shows the precipitous drop in prices that occurred over 35 years of innovation and increasing demand. Roll your cursor over each datapoint to see more information. Static versions of this image are also available: <a href="/assets/cost-per-gigabyte-small.png">small</a>, <a href="/assets/cost-per-gigabyte-large.png">large</a>. Read below for sources.</div>
+			</div>
+		<p>
+				IT'S BEEN almost five years since I first looked at the <a href="/cost-per-gigabyte">history of hard drive cost</a>, and a lot has changed in the market. The most salient change is that, on average, drives are no longer getting bigger. For a long time, one of the driving factors in consumer hard drive innovation was the need for more space, and that simply isn’t a huge force anymore. Increasingly, we're focusing our attentions on speed, reliability, and accessibility. There are several external forces that have shifted the focus away from the mantra of <b>"more space cheaper"</b>, and it’s hard to imagine the industry ever pivoting back.
+		</p>
+		<h3>we've stopped all the downloadin'</h3>
+		<p>
+				When it comes to the decline in storage needs, the elephant in the room is the precipitous decline in media dowloads, illegal or otherwise. Services like Pandora, Netflix, and Amazon Instant Video are supplanting caches of downloaded music and movies, and making it easier for consumers to manage their media catalogs.
+		</p>
+		<h3>the cloud</h3>
+		<p>
+				For reliable storage of personal files, consumers are increasingly turning towards the internet.		Services like Dropbox, Google Drive, and Amazon Cloud Storage are making it easier for people to not only backup documents and photos, but also share across multiple devices. These services also provide redundant storage and, as with the streaming services mentioned above, make our lives simpler and less prone to catastrophic loss.
+		</p>
+		<h3>the fall of the desktop (and the laptop for that matter)</h3>
+		<p>
+				As smartphones and tablets become more integrated into our lives, we are seeing much less reliance on personal computers as the single point of access for digital content. This makes a monolithic hard drive in a home office feel less like home-sweet-home and more like an inconvenience.
+		</p>
+		<h3>solid state drives</h3>
+		<p>
+				With the introduction of super-fast drives, the focus has turned away from commodity disks and towards advancements in speed that improve the end user’s quality of life. As our digital lives become more web-centric, we have less to store but we want to get what we do store faster. Solid state drives offer a more responsive experience and, since we’re less reliant on local storage, we’re willing to make the speed vs. space tradeoff.
+		</p>
+		<div class="note"><b>note:</b> more information about the data and method is available at the original <a href="/cost-per-gigabyte">history of hard drive cost</a> page.</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.min.js"></script>
 <script>
+var svgWidth = 960;
+var svgAspect = 16/9;
+if (window.innerWidth < svgWidth){
+	svgWidth = window.innerWidth -80;
+}
+var svgHeight = svgWidth / svgAspect;
 
-var margin = {top: 20, right: 20, bottom: 30, left: 80},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var margin = {top: 30, right: 30, bottom: 40, left: 90},
+		width = svgWidth - margin.left - margin.right,
+		height = svgHeight - margin.top - margin.bottom;
 
 var x = d3.scale.linear()
-    .range([0, width]);
+		.range([0, width]);
 
 var y = d3.scale.log()
-    .range([height, 0]);
+		.range([height, 0]);
 
 var color = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickFormat(d3.format(".0f"));
+		.scale(x)
+		.orient("bottom")
+		.tickFormat(d3.format(".0f"));
 
 var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(d3.scale.log().tickFormat(1, "$,.2f"));
+		.scale(y)
+		.orient("left")
+		.tickFormat(d3.scale.log().tickFormat(1, "$,.2f"));
 
 var svg = d3.select("#chart").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.attr("id", "chart-svg")
+		.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight)
+		.attr("preserveAspectRatio", "xMidYMid")
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.tsv("/static/chart/raw-data.tsv", function(error, data) {
-  data.forEach(function(d) {
-    d.dateDecimal = +d.dateDecimal;
-    d.dollarsPerGb = +d.dollarsPerGb;
-  });
-  x.domain(d3.extent(data, function(d) { return d.dateDecimal; })).nice();
-  y.domain(d3.extent(data, function(d) { return d.dollarsPerGb; })).nice();
+		data.forEach(function(d) {
+		d.dateDecimal = +d.dateDecimal;
+		d.dollarsPerGb = +d.dollarsPerGb;
+		});
+		x.domain(d3.extent(data, function(d) { return d.dateDecimal; })).nice();
+		y.domain(d3.extent(data, function(d) { return d.dollarsPerGb; })).nice();
 
-  svg.append("g")
-       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", width)
-      .attr("y", -6)
-      .style("text-anchor", "end");
+		svg.append("g")
+				 .attr("class", "x axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis)
+		.append("text")
+				.attr("class", "label")
+				.attr("x", width)
+				.attr("y", -6)
+				.style("text-anchor", "end");
 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "1.71em")
-      .style("text-anchor", "end")
+		svg.append("g")
+				.attr("class", "y axis")
+				.call(yAxis)
+		.append("text")
+				.attr("class", "label")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 6)
+				.attr("dy", "1.71em")
+				.style("text-anchor", "end")
 
-  svg.append("text")
-    .attr("x", (width / 2))
-    .attr("y", 4)
-    .attr("text-anchor", "middle")
-    .style("font-size", "20px")
-    .text("hard drive cost per gigabyte (USD)");
+		svg.append("text")
+		.attr("x", (width / 2))
+		.attr("y", 4)
+		.attr("text-anchor", "middle")
+		.style("font-size", "20px")
+		.text("hard drive cost per gigabyte (USD)");
 
-  var costFormat = function(cost){
-    if (cost && !isNaN(cost) && cost != 0){
-      return d3.format("$,.2f")(cost);
-    } else {
-      return '';
-    }
-  }
-  var sizeFormat = function(sizeInMb){
-    var fmt = function(n) {
-      if (n < 10) return d3.format(",.1f")(n);
-      else return d3.format(",.0f")(n)
-    };
-    if (!sizeInMb || isNaN(sizeInMb) || sizeInMb == 0){
-      return "[unknown size]";
-    } else if (sizeInMb >= 1000000) {
-      return fmt(sizeInMb/1000000) + "TB drive";
-    } else if (sizeInMb >= 1000) {
-      return fmt(sizeInMb/1000) + "GB drive";
-    } else {
-      return fmt(sizeInMb) + "MB drive"
-    }
-  };
-  var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+		var costFormat = function(cost){
+		if (cost && !isNaN(cost) && cost != 0){
+				return d3.format("$,.2f")(cost);
+		} else {
+				return '';
+		}
+		}
+		var sizeFormat = function(sizeInMb){
+		var fmt = function(n) {
+				if (n < 10) return d3.format(",.1f")(n);
+				else return d3.format(",.0f")(n)
+		};
+		if (!sizeInMb || isNaN(sizeInMb) || sizeInMb == 0){
+				return "[unknown size]";
+		} else if (sizeInMb >= 1000000) {
+				return fmt(sizeInMb/1000000) + "TB drive";
+		} else if (sizeInMb >= 1000) {
+				return fmt(sizeInMb/1000) + "GB drive";
+		} else {
+				return fmt(sizeInMb) + "MB drive"
+		}
+		};
+		var div = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
 
-  svg.selectAll(".dot")
-      .data(data)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 3.5)
-      .attr("cx", function(d) { return x(d.dateDecimal); })
-      .attr("cy", function(d) { return y(d.dollarsPerGb); })
-      .style("fill", function(d) { return color(Math.floor(Math.log(d.sizeInMb)/Math.log(1000))); })
-      .on("mouseover", function(d) {
-        div.transition()
-          .duration(200)
-          .style("opacity", .9);
-        div .html(d.date + "<br/>" +
-            sizeFormat(d.sizeInMb) + "<br/>" +
-            costFormat(d.cost) + "<br/>" +
-            d3.format("$,.2f")(d.dollarsPerGb) + " per GB")
-          .style("left", (d3.event.pageX) + "px")
-          .style("top", (d3.event.pageY - 28) + "px");
-        })
-      .on("mouseout", function(d) {
-        div.transition()
-            .duration(500)
-            .style("opacity", 0);
-      });
+		svg.selectAll(".dot")
+				.data(data)
+		.enter().append("circle")
+				.attr("class", "dot")
+				.attr("r", 3.5)
+				.attr("cx", function(d) { return x(d.dateDecimal); })
+				.attr("cy", function(d) { return y(d.dollarsPerGb); })
+				.style("fill", function(d) { return color(Math.floor(Math.log(d.sizeInMb)/Math.log(1000))); })
+				.on("mouseover", function(d) {
+				div.transition()
+						.duration(200)
+						.style("opacity", .9);
+				div .html(d.date + "<br/>" +
+						sizeFormat(d.sizeInMb) + "<br/>" +
+						costFormat(d.cost) + "<br/>" +
+						d3.format("$,.2f")(d.dollarsPerGb) + " per GB")
+						.style("left", (d3.event.pageX) + "px")
+						.style("top", (d3.event.pageY - 28) + "px");
+				})
+				.on("mouseout", function(d) {
+				div.transition()
+						.duration(500)
+						.style("opacity", 0);
+				});
 
 });
+originalChartWidth = document.getElementById("chart").offsetWidth;
+d3.select(window).on("resize", sizeChange);
+function sizeChange() {
+	var width = document.getElementById("chart").offsetWidth;
+	d3.select("svg").attr("height", width/svgAspect);
+	d3.select("svg").attr("width", width);
+}
 
 </script>
-
 {% endblock %}
