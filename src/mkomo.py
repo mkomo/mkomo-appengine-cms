@@ -1,8 +1,12 @@
 import os
 import mimetypes
-from google.appengine.ext.webapp import template
+
 from google.appengine.api import users
 from google.appengine.ext import webapp
+
+from django.template import Context, Template
+import django.template.loader
+
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 
@@ -16,8 +20,8 @@ class ModelAndView():
 class NotFoundException(Exception):
     def __init__(self,message='The page you requested does not exit.'):
         self.message = message
-        
-        
+
+
 class MavRequestHandler(webapp.RequestHandler):
     def get(self):
         try:
@@ -36,12 +40,16 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(mav)
             
     def render(self, mav):
-        path = os.path.join(os.path.abspath('.'), 'src', 'pages', mav.view)
+        path = os.path.join(os.path.dirname(__file__), 'pages', mav.view)
         model = mav.model
         if users.is_current_user_admin():
             model['is_admin'] = True
-            model['logout_url'] = users.create_logout_url('/') 
-        self.response.out.write(template.render(path, model))
+            model['logout_url'] = users.create_logout_url('/')
+
+        template_file = open(path)
+        compiled_template = Template(template_file.read())
+        template_file.close()
+        self.response.out.write(compiled_template.render(Context(model)))
 
 class Page(db.Model):
     uri = db.StringProperty()
