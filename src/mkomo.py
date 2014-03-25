@@ -94,7 +94,10 @@ class Asset(db.Model):
 
 class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
-        uri = self.request.path
+        uri = self.request.path[1:]
+        static_page_path = os.path.join(os.path.dirname(__file__), 'pages', uri + '.html')
+        if os.path.isfile(static_page_path):
+            return ModelAndView(view = uri + '.html', model = {})
         page = Page.gql("where uri=:1", uri).get()
         if page is not None and (page.is_public or users.is_current_user_admin()):
             return ModelAndView(view='standard.html',
@@ -118,14 +121,6 @@ class StandardPage(MavRequestHandler):
                                    'pages': pages})
 
 
-class PageCostPerGigabyte(MavRequestHandler):
-    def get_model_and_view(self):
-        uri = self.request.path
-        page = Page.gql("where uri=:1", uri).get()
-        return ModelAndView(view='cost-per-gigabyte.html',
-                            model={'page': page})
-
-
 class AssetRequestHandler(webapp.RequestHandler):
     def get(self):
         uri = self.request.path[8:]
@@ -137,7 +132,6 @@ class AssetRequestHandler(webapp.RequestHandler):
             self.error(404)
 
 application = webapp.WSGIApplication([('/assets/.*', AssetRequestHandler),
-                                      ('/cost-per-gigabyte-update', PageCostPerGigabyte),
                                       ('/.*', StandardPage)],
                                      debug=True)
 
