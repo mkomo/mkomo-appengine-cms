@@ -94,10 +94,11 @@ class Asset(db.Model):
 
 class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
-        uri = self.request.path[1:]
-        static_page_path = os.path.join(os.path.dirname(__file__), 'pages', uri + '.html')
+        uri = self.request.path
+        filename = uri[1:] + '.html' if len(uri) > 1 else 'index.html'
+        static_page_path = os.path.join(os.path.dirname(__file__), 'pages', filename)
         if os.path.isfile(static_page_path):
-            return ModelAndView(view = uri + '.html', model = {})
+            return ModelAndView(view = filename, model = {})
         page = Page.gql("where uri=:1", uri).get()
         if page is not None and (page.is_public or users.is_current_user_admin()):
             return ModelAndView(view='standard.html',
