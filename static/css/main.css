@@ -18,7 +18,7 @@ body {
 	margin: 0 10px 2px 10px;
 	padding: 0;
 }
-.header .title{
+.header .title {
 	font-size: 57px;
 	color: #0f3f09;
 	display: block;
@@ -62,9 +62,20 @@ body {
 @media screen and (max-width: 730px) {
 	.header .title img{
 		width: 100%;
+		max-width: 500px;
 	}
-}
-@media screen and (max-width: 730px) {
+	.header .title {
+		margin: 0 10px;
+		font-size: 57px;
+		float: none;
+		height: auto;
+		text-decoration: none;
+		text-align: center;
+		line-height: 1;
+	}
+	.constrained {
+		width: 100%;
+	}
 	body {
 		margin: 8px 0px;
 	}
@@ -77,6 +88,7 @@ body {
 		float: none;
 		padding: 0px 15px;
 		background-color: rgba(179,243,171,0.8);
+		text-align: center;
 	}
 
 	.nav li {

@@ -93,7 +93,7 @@ if (window.innerWidth < svgWidth){
 }
 var svgHeight = svgWidth / svgAspect;
 
-var margin = {top: 30, right: 30, bottom: 40, left: 90},
+var margin = {top: svgWidth/30, right: svgWidth/30, bottom: svgWidth/30 + 10, left: 60 + svgWidth/30},
 		width = svgWidth - margin.left - margin.right,
 		height = svgHeight - margin.top - margin.bottom;
 
@@ -150,13 +150,13 @@ d3.tsv("/static/chart/raw-data.tsv", function(error, data) {
 				.attr("transform", "rotate(-90)")
 				.attr("y", 6)
 				.attr("dy", "1.71em")
-				.style("text-anchor", "end")
+				.style("text-anchor", "end");
 
 		svg.append("text")
 		.attr("x", (width / 2))
 		.attr("y", 4)
 		.attr("text-anchor", "middle")
-		.style("font-size", "20px")
+		.style("font-size", (svgWidth / 40) + "px")
 		.text("hard drive cost per gigabyte (USD)");
 
 		var costFormat = function(cost){
@@ -165,11 +165,11 @@ d3.tsv("/static/chart/raw-data.tsv", function(error, data) {
 		} else {
 				return '';
 		}
-		}
+		};
 		var sizeFormat = function(sizeInMb){
 		var fmt = function(n) {
 				if (n < 10) return d3.format(",.1f")(n);
-				else return d3.format(",.0f")(n)
+				else return d3.format(",.0f")(n);
 		};
 		if (!sizeInMb || isNaN(sizeInMb) || sizeInMb == 0){
 				return "[unknown size]";
