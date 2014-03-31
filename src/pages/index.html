@@ -1,0 +1,125 @@
+{% extends "base-raw.html" %}
+
+{% block head_supplement %}
+<style>
+.square-container {
+	clear: both;
+	margin: 10px auto;
+	max-width: 1400px;
+	text-align: center;
+}
+.square-container-after {
+	clear: both;
+}
+.square {
+	margin: 10px 5px 0 5px;
+	display: inline-block;
+	background-color: rgba(13,108,0,0.4);
+	padding: 10px;
+	width: 25%;
+	position: relative;
+}
+.square.dark {
+	background-color: rgba(13,108,0,0.8);
+}
+.square img {
+	width: 100%;
+	vertical-align: bottom;
+}
+.square-caption {
+	position: absolute;
+	text-align: right;
+	text-decoration: none;
+	color: #0f3f09;
+	font-size: 25px;
+	font-weight: bold;
+	left: 30px;
+	bottom: 13px;
+	right: 17px;
+	line-height: 1.2;
+}
+.square.dark .square-caption {
+	color: #f8fff7;
+}
+@media screen and (max-width: 900px) {
+	.square {
+		width: 43%;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.square {
+		width: 88%;
+	}
+}
+</style>
+{% endblock %}
+
+{% block container_type %}dynamic-width{% endblock %}
+
+{% block body %}
+
+{% comment %}
+hd-cost
+weather zips
+
+github
+linkedin
+
+calc
+biketaco
+
+bikemap
+celeste
+whatididthatday
+prime number grid
+
+easter
+
+{% endcomment %}
+<div class="square-container">
+	<div class="square dark">
+		<a href="/cost-per-gigabyte">
+			<img src="/static/index-img/hd-photo-bw.jpg" />
+		</a>
+		<a href="/cost-per-gigabyte" class="square-caption">history of<br/>hard drive cost</a>
+	</div>
+
+	<div class="square">
+		<a href="http://calc.mkomo.com">
+			<img src="/static/index-img/calc.png" />
+		</a>
+		<a href="http://calc.mkomo.com" class="square-caption">calc</a>
+	</div>
+
+	<div class="square dark">
+		<a href="/weather-rankings">
+			<img src="/static/index-img/weather-bw.jpg" />
+		</a>
+		<a href="/weather-rankings" class="square-caption">best<br/>weather anywhere</a>
+	</div>
+
+	<div class="square">
+		<a href="https://github.com/mkomo">
+			<img src="/static/index-img/github.png" />
+		</a>
+		<a href="https://github.com/mkomo" class="square-caption">github</a>
+	</div>
+
+	<div class="square dark">
+		<a href="https://twitter.com/biketaco">
+			<img src="/static/index-img/bike-taco-bw.jpg" />
+		</a>
+		<a href="https://twitter.com/biketaco" class="square-caption">tour de taco</a>
+	</div>
+
+	<div class="square">
+		<a href="http://www.linkedin.com/in/matthewkomorowski">
+			<img src="/static/index-img/linkedin.png" />
+		</a>
+		<a href="http://www.linkedin.com/in/matthewkomorowski" class="square-caption">linkedin</a>
+	</div>
+</div>
+
+<div class="square-container-after"></div>
+{% endblock %}
