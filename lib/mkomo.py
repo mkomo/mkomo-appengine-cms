@@ -40,7 +40,7 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(mav)
             
     def render(self, mav):
-        path = os.path.join(os.path.dirname(__file__), 'pages', mav.view)
+        path = os.path.join(os.path.dirname(__file__), '..', 'templates', mav.view)
         model = mav.model
         if users.is_current_user_admin():
             model['is_admin'] = True
@@ -96,9 +96,9 @@ class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
         uri = self.request.path
         filename = uri[1:] + '.html' if len(uri) > 1 else 'index.html'
-        static_page_path = os.path.join(os.path.dirname(__file__), 'pages', filename)
+        static_page_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'pages', filename)
         if os.path.isfile(static_page_path):
-            return ModelAndView(view = filename, model = {})
+            return ModelAndView(view = static_page_path, model = {})
         page = Page.gql("where uri=:1", uri).get()
         if page is not None and (page.is_public or users.is_current_user_admin()):
             return ModelAndView(view='standard.html',
