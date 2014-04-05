@@ -19,10 +19,7 @@
 	<div class="container fixed-width">
 		<div class="header">
 			<a href="/" class="title"><img src="/static/img/title.png" alt="[mkomo.com]"/></a>
-			<ul class="nav">
-				<li><a href="/about">about</a></li>
-				<li><a href="/projects">projects</a></li>
-			</ul>
+			{% include "nav.html" %}
 		</div>
 	</div>
 	<div class="container {% block container_type %}fixed-width{% endblock %}">
