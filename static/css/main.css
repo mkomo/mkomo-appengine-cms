@@ -209,6 +209,18 @@ body {
 	float: right; 
 	margin-left: 7px;
 }
+
+@media screen and (max-width: 400px) {
+	.content .right-img{
+		float: none;
+		text-align: right;
+		border: none;
+	}
+}
+.content .right-img .caption{
+	font-size: 0.8em;
+	text-align: right;
+}
 /********************* story specific ********************/
 .content .entry {
 	margin: 4px;
