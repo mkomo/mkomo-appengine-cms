@@ -84,7 +84,7 @@ class Page(db.Model):
     date_last_edited = db.DateTimeProperty(auto_now=True)
     is_public = db.BooleanProperty(default=False)
 
-    def __init__(self, **entries):
+    def load(self, **entries):
         self.__dict__.update(entries)
 
 
@@ -143,7 +143,9 @@ class StandardPage(MavRequestHandler):
             lst = List(**listspec)
             pages = []
             for entry in listspec['entries']:
-                pages.append(Page(**entry))
+                page = Page()
+                page.load(**entry)
+                pages.append(page)
 
             return ModelAndView(view='list.html',
                                 model={
