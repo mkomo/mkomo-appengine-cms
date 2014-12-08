@@ -64,7 +64,58 @@ entries:
     I was shopping for a hard drive a few weeks ago and I was dumbfounded to see that there are now 1 terabyte drives for under $100. That's less than 10 cents per gigabyte!
     <br/><br/>
     I decided to look for some historic pricing information to see exactly how fast the cost of storage space has gone down over the last 30 years. If you guessed <span class="bold">very</span> quickly, you were right.
+- _headline: hist - bash history forever!
+  _uri:
+  _date: '2012-02-16'
+  _snippet_markdown: |
+    When I first started spending a lot of time in a shell, I remember often getting a sinking feeling when a command I needed had just fallen off the `history` stack. Sure, you can adjust the number of entries stored in your bash history, but that didn't seem good enough.
+    
+    So I wrote a utility called *[hist](https://github.com/mkomo/hist)*. It allows me to do some things that are not possible with the standard builtin as well as some things that are not otherwise easy or straightforward:
 
+    *  retain my history forever and aggregate it across computers
+    *  immediately see commands that were executed in other terminal sessions.
+    *  retain with each history entry information including: shell PID, exit code, and pwd at the time of execution.
+    *  query my entire history efficiently using hist -ag $REGEXP, where $REGEXP can include the datetime, shell id, directory of execution or any part of the command
+    
+    It's simple to add hist to your bash environment:
+    
+    * clone the *hist* repo:
+        
+            git clone https://github.com/mkomo/hist.git
+        
+    * put hist in an executable path:
+    
+            ln -s hist/hist ~/bin/hist
+    
+    * register hist in your bash prompt command:
+    
+            function mkomoprompt {
+                EXITSTATUS="$?"
+                eval "`hist -r`"
+            }
+            
+            export PROMPT_COMMAND=mkomoprompt
+    
+    now all of your history will be stored forever in *~/.bash_eternal_history* and you can query it at any time with commands like:
+    
+        # every time you've executed the apt-get command on this machine
+        hist -ag apt-get
+    or
+    
+        # every time command you've executed in this directory during the current shell session
+        hist -cg `pwd`
+        
+    and see results like this:
+        
+        #pid, date, time, exit status, directory, command
+        16420	2014-11-23 13:24:04	0	/home/mkomorowski	sudo apt-get install compiz-plugins-extra 
+        16420	2014-11-23 13:24:53	130	/home/mkomorowski	sudo apt-get install compiz-plugins-extra 
+        11962	2014-11-26 13:00:54	100	/home/mkomorowski	sudo apt-get install cvt
+        11962	2014-12-05 03:36:08	0	/home/mkomorowski	sudo apt-get install pepperflashplugin-nonfree
+        25065	2014-12-07 10:21:15	0	/home/mkomorowski/workspaces	sudo apt-get install vlc
+
+    [enjoy!](https://github.com/mkomo/hist)
+    
 - _headline: what's your ideal weather?
   _uri: /weather-rankings
   _date: '2009-02-11'
