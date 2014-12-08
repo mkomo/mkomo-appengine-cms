@@ -221,6 +221,15 @@ body {
 	font-size: 0.8em;
 	text-align: right;
 }
+
+pre {
+	border-left: 2px solid #999;
+	padding-left: 10px;
+	margin-left: 10px;
+
+	background-color: rgba(200,200,200,0.4);
+	overflow-x:scroll;
+}
 /********************* story specific ********************/
 .content .entry {
 	margin: 4px;

@@ -1,7 +1,12 @@
 import os
 import mimetypes
 import yaml
-import json
+
+# retrieved using instructions: https://github.com/GoogleCloudPlatform/Data-Pipeline
+import sys
+sys.path.append("./lib")
+
+import markdown
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -39,7 +44,8 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(ModelAndView(view='error.html',
                                 model={'message': ex,
                                        'uri': self.request.path}))
-    
+            raise ex
+
     def post(self):
         mav = self.post_model_and_view()
         if mav is not None:
@@ -145,6 +151,9 @@ class StandardPage(MavRequestHandler):
             for entry in listspec['entries']:
                 page = Page()
                 page.load(**entry)
+                if ('_snippet_markdown' in entry):
+                    page._snippet = markdown.markdown(entry['_snippet_markdown'])
+                    #, extensions=[MyExtension(), 'path.to.my.ext', 'markdown.extensions.footnotes']
                 pages.append(page)
 
             return ModelAndView(view='list.html',
