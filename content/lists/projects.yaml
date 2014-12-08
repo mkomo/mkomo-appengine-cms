@@ -1,0 +1,28 @@
+---
+_id: projects
+_title:
+_description:
+_keywords:
+_headline: some recent projects
+entries:
+- _headline: a history of storage cost
+  _uri: /cost-per-gigabyte
+  _date:
+  _snippet: |
+    <a href="/cost-per-gigabyte" class="right-img" style="height: 136px;">
+     <img style="border: none" alt="" src="/static/assets/hd-cost-photo.jpg"/>
+    </a>
+    I was shopping for a hard drive a few weeks ago and I was dumbfounded to see that there are now 1 terabyte drives for under $100. That's less than 10 cents per gigabyte!
+    <br/><br/>
+    I decided to look for some historic pricing information to see exactly how fast the cost of storage space has gone down over the last 30 years. If you guessed <span class="bold">very</span> quickly, you were right.
+
+- _headline: what's your ideal weather?
+  _uri: /weather-rankings
+  _date:
+  _snippet: |
+    <a href="/weather-rankings" class="right-img" style="height: 259px;">
+     <img style="border: none" alt="" src="/static/assets/nice-weather.jpg"/>
+    </a>
+    I've always been unsatisfied by those "Ten Cities with Unbeatable Weather"-type articles that you see in magazines every once in a while. Sure, everyone knows San Diego is nice, but I wanted something a little bit more quantifiable.
+    <br/><br/>
+    I compiled climate data from around the country (averages, records, precipitation) and wrote some code that ranked locations based on my own criteria for what constitutes the best weather. The end result was a set of maps that gave me an idea about which areas of the country are nicest (hint: the magazines weren't too far off).
