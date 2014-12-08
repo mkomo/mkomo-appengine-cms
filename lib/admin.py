@@ -7,7 +7,7 @@ from lib import djangoforms
 try:
   from mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
 except ImportError:
-  from src.mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
+  from lib.mkomo import Page, Asset, List, ModelAndView, MavRequestHandler
 
 
 """*************************************************"""
