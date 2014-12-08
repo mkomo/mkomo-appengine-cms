@@ -1,6 +1,7 @@
 import os
 import mimetypes
 import yaml
+import string
 
 # retrieved using instructions: https://github.com/GoogleCloudPlatform/Data-Pipeline
 import sys
@@ -44,7 +45,6 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(ModelAndView(view='error.html',
                                 model={'message': ex,
                                        'uri': self.request.path}))
-            raise ex
 
     def post(self):
         mav = self.post_model_and_view()
@@ -149,11 +149,7 @@ class StandardPage(MavRequestHandler):
             lst = List(**listspec)
             pages = []
             for entry in listspec['entries']:
-                page = Page()
-                page.load(**entry)
-                if ('_snippet_markdown' in entry):
-                    page._snippet = markdown.markdown(entry['_snippet_markdown'])
-                    #, extensions=[MyExtension(), 'path.to.my.ext', 'markdown.extensions.footnotes']
+                page = self.get_page_from_entry(entry)
                 pages.append(page)
 
             return ModelAndView(view='list.html',
@@ -162,7 +158,50 @@ class StandardPage(MavRequestHandler):
                                        'pages': pages
                                 })
         else:
-            raise NotFoundException
+            return self.get_list_fs_item()
+
+    def get_list_fs_item(self):
+        if self.request.path[1:].rfind('/') > 1:
+            list_id = self.request.path[1:self.request.path.rfind('/')]
+            item_id = self.request.path[self.request.path.rfind('/')+1:]
+            #self.response.out.write(list_id + ";" +item_id)
+            listspec = self.get_fs_list_spec(list_id)
+            if listspec != None:
+                lst = List(**listspec)
+                for entry in listspec['entries']:
+                    if '_headline' in entry and self.get_slug(entry['_headline']) == item_id:
+                        page = self.get_page_from_entry(entry)
+                        return ModelAndView(view='list-item.html',
+                                            model={
+                                               'list': lst,
+                                               'pages': [page]})
+        raise NotFoundException
+
+    def get_slug(self, headline):
+        exclude = set(string.punctuation)
+        s = ''.join(ch for ch in headline if ch not in exclude)
+        return s.lower().replace(" ", "-")
+
+    def get_fs_list_spec(self, list_id):
+        filename = list_id + ".yaml"
+        list_yaml_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'lists', filename)
+        if os.path.isfile(list_yaml_path):
+            stream = open(list_yaml_path, 'r')
+            listspec = yaml.load(stream)
+            return listspec
+        else:
+            return None
+
+    def get_page_from_entry(self, entry):
+        page = Page()
+        if '_uri' not in entry or entry['_uri'] == None:
+            entry['_uri'] = self.request.path + "/" + self.get_slug(entry['_headline'])
+        if ('_snippet_markdown' in entry):
+            entry['_snippet'] = markdown.markdown(entry['_snippet_markdown'])
+            #, extensions=[MyExtension(), 'path.to.my.ext', 'markdown.extensions.footnotes']
+
+        page.load(**entry)
+        return page
 
 class AssetRequestHandler(webapp.RequestHandler):
     def get(self):
