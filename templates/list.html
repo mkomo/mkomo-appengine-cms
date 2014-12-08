@@ -17,10 +17,14 @@
 					{% endif %}
 				</div>
 				<div class="entry-snippet">
-					{% if page.get_snippet %} 
+					{% if page.get_snippet %}
 						{{ page.get_snippet|safe }}
-						{% if page.uri %} 
-							<a href="{{ page.uri }}">[read&nbsp;more]</a>
+						{% if page.uri %}
+							{% if request.path not in page.uri %}
+								<a class="tout" href="{{ page.uri }}">[read&nbsp;more]</a>
+							{% else %}
+								<a class="tout" href="{{ page.uri }}">[permalink]</a>
+							{% endif %}
 						{% endif %}
 					{% else %}
 						{{ page.content|safe }}

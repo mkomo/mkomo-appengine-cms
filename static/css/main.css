@@ -228,7 +228,7 @@ pre {
 	margin-left: 10px;
 
 	background-color: rgba(200,200,200,0.4);
-	overflow-x:scroll;
+	overflow-x: auto;
 }
 /********************* story specific ********************/
 .content .entry {
@@ -250,6 +250,11 @@ pre {
 .entry .entry-snippet{
 	clear: both;
 	padding: 0 4px;
+}
+
+.entry .tout{
+	font-size: 0.9em;
+	margin-top: 6px;
 }
 
 .clear {

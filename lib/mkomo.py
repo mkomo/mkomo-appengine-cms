@@ -154,7 +154,7 @@ class StandardPage(MavRequestHandler):
 
             return ModelAndView(view='list.html',
                                 model={
-                                       'list': lst,
+                                       'list': lst, 'request': self.request,
                                        'pages': pages
                                 })
         else:

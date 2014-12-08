@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block headline %}
+	<a href="/{{ list.id }}">/{{ list.id }}/</a>
+	{{ pages.0.headline }}
+{% endblock %}
+
+{% block content %}
+	<div class="entry">
+		<div class="entry-snippet">
+			{{ pages.0.snippet|safe }}
+			<div class="clear"></div>
+		</div>
+	</div>
+{% endblock %}
