@@ -1,5 +1,7 @@
 import os
 import mimetypes
+import yaml
+import json
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -9,7 +11,6 @@ import django.template.loader
 
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
-
 
 class ModelAndView():
     def __init__(self,model,view):
@@ -77,7 +78,10 @@ class Page(db.Model):
     precedence = db.FloatProperty(default=1.0)
     date_last_edited = db.DateTimeProperty(auto_now=True)
     is_public = db.BooleanProperty(default=False)
-    
+
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
 
 class List(db.Model):
     id = db.StringProperty()
@@ -85,6 +89,9 @@ class List(db.Model):
     description = db.StringProperty()
     keywords = db.StringProperty()
     headline = db.StringProperty()
+
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 
 
 class Asset(db.Model):
@@ -105,12 +112,12 @@ class StandardPage(MavRequestHandler):
                                 model={'page': page})
         else:
             return self.get_list()
-        
+
     def get_list(self):
         list_id = self.request.path[1:]
-        list = List.gql("where id=:1", list_id).get()
-        if list is None:
-            raise NotFoundException
+        lst = List.gql("where id=:1", list_id).get()
+        if lst is None:
+            return self.get_list_fs()
         q = Page.all()
         q.filter('list_id =', list_id)
         if not users.is_current_user_admin():
@@ -118,9 +125,28 @@ class StandardPage(MavRequestHandler):
         q.order('-precedence')
         pages = q.fetch(100)
         return ModelAndView(view='list.html',
-                            model={'list': list,
+                            model={'list': lst,
                                    'pages': pages})
 
+    def get_list_fs(self):
+        list_id = self.request.path[1:]
+        filename = list_id + ".yaml"
+        list_yaml_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'lists', filename)
+        if os.path.isfile(list_yaml_path):
+            stream = open(list_yaml_path, 'r')
+            listspec = yaml.load(stream)
+            lst = List(**listspec)
+            pages = []
+            for entry in listspec['entries']:
+                pages.append(Page(**entry))
+
+            return ModelAndView(view='list.html',
+                                model={
+                                       'list': lst,
+                                       'pages': pages
+                                })
+        else:
+            raise NotFoundException
 
 class AssetRequestHandler(webapp.RequestHandler):
     def get(self):
