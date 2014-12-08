@@ -5,8 +5,57 @@ _description:
 _keywords:
 _headline: some recent projects
 entries:
+- _headline: ldapsearch oneliners
+  _uri:
+  _date:
+  _snippet_markdown: |
+    [ldapsearch](http://linux.die.net/man/1/ldapsearch) is a command line tool for querying ldap. Sometimes you want to retrieve directory information and don't have access an administrative interface, or you want something that's scriptable -- that's when _ldapsearch_ comes in handy.
+    
+    handy environmental variables:
+
+        export LDAP_HOST="ldap01.example.com"
+        export LDAP_SEARCH_BASE="dc=foo,dc=bar" # the search base for your searches 
+        export LDAP_BIND_DN="$USERNAME@foo.bar" the DistinguishedName to use when binding to the ldap host
+
+        export LDAP_PASSWORD_ARG="-w" #prompts everytime the command is run
+        export LDAP_PASSWORD_ARG="-W mysecurepassword" #stores your password to the ldap server in memory (probably a bad idea)
+
+    here are some one-liners that I use pretty frequently:
+    
+        #list all groups
+        #usage: ldaplistgroups
+        alias ldaplistgroups='ldapsearch -x -h $LDAP_HOST -b "$LDAP_SEARCH_BASE" -D $LDAP_BIND_DN "(objectcategory=group)" * $LDAP_PASSWORD_ARG | grep "^dn:" | sed "s/.* CN=\([^,]*\),.*/\1/" | sort'
+
+        #list all members of the given group
+        #usage: ldapmembership "engineering-team"
+        ldapmembership() { ldapsearch -x -h $LDAP_HOST -b "$LDAP_SEARCH_BASE" -D $LDAP_BIND_DN "(&(objectcategory=user)(memberof=CN=$1,OU=Distribution Groups,$LDAP_SEARCH_BASE))" * $LDAP_PASSWORD_ARG | grep ^mailNickname: | sed "s/mailNickname: //" | tr [A-Z] [a-z] | sort }
+
+        #show the given user's entire ldap entry
+        #usage: ldapuser "Matt Komo"
+        ldapuser() { ldapsearch -x -h $LDAP_HOST -b "$LDAP_SEARCH_BASE" -D $LDAP_BIND_DN "(&(objectcategory=user)(CN=$1))" $LDAP_PASSWORD_ARG }
+
+    and here is a slightly more complicated bash script that I use to retrieve all groups that a user is a member of (including recursive groups):
+    
+        #!/bin/bash
+
+        #usage: ldapallgroups "Matt Komo"
+        QUERY="(CN=$1)"
+
+        echoerr() { echo "$@" 1>&2; }
+
+        while [ "$(echo $QUERY | wc -c)" -gt "6" ]; do
+
+            LDG=$(ldapsearch -x -h $LDAP_HOST -b "$LDAP_SEARCH_BASE" -D $LDAP_BIND_DN "$QUERY" 'memberOf' $LDAP_PASSWORD_ARG | grep "^memberOf: " | sed "s/memberOf: \([^,]*\),.*/\1/")
+            if [ -n "$LDG" ]; then
+                echoerr "next order groups: "
+                echo "$LDG"
+            fi
+            QUERY=$(echo "(|($LDG))" | tr "\n" "&" | sed 's/\&$//' | sed "s/\&/)(/g");
+            echoerr "next query: $QUERY"
+        done
+
 - _headline: a history of storage cost
-  _uri: /cost-per-gigabyte
+  _uri: /cost-per-gigabyte-update
   _date:
   _snippet: |
     <a href="/cost-per-gigabyte" class="right-img" style="height: 136px;">
