@@ -7,7 +7,7 @@ _headline: some recent projects
 entries:
 - _headline: ldapsearch oneliners
   _uri:
-  _date:
+  _date: '2014-12-06'
   _snippet_markdown: |
     [ldapsearch](http://linux.die.net/man/1/ldapsearch) is a command line tool for querying ldap. Sometimes you want to retrieve directory information and don't have access an administrative interface, or you want something that's scriptable -- that's when _ldapsearch_ comes in handy.
     
@@ -56,7 +56,7 @@ entries:
 
 - _headline: a history of storage cost
   _uri: /cost-per-gigabyte-update
-  _date:
+  _date: '2014-03-05'
   _snippet: |
     <a href="/cost-per-gigabyte" class="right-img" style="height: 136px;">
      <img style="border: none" alt="" src="/static/assets/hd-cost-photo.jpg"/>
@@ -67,7 +67,7 @@ entries:
 
 - _headline: what's your ideal weather?
   _uri: /weather-rankings
-  _date:
+  _date: '2009-02-11'
   _snippet: |
     <a href="/weather-rankings" class="right-img" style="height: 259px;">
      <img style="border: none" alt="" src="/static/assets/nice-weather.jpg"/>

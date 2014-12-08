@@ -6,6 +6,9 @@
 	{% if pages %}
 	    {% for page in pages %}
 			<div class="entry">
+				{% if page.date %}
+					<div class="entry-date">{{ page.date }}</div>
+				{% endif %}
 				<div class="entry-headline">
 					{% if page.uri %} 
 						<a href="{{ page.uri }}">{{ page.headline }}</a>
