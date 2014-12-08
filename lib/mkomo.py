@@ -34,6 +34,11 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(ModelAndView(view='error.html',
                                 model={'message': ex.message,
                                        'uri': self.request.path}))
+        except Exception, ex:
+            self.response.set_status(500)
+            self.render(ModelAndView(view='error.html',
+                                model={'message': ex,
+                                       'uri': self.request.path}))
     
     def post(self):
         mav = self.post_model_and_view()
