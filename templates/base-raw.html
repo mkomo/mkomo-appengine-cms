@@ -32,6 +32,7 @@
 			{% endif %}
 			{% if is_admin %}
 				<a href="{{logout_url}}">admin logout</a>
+				| <a href="/admin/">admin home</a>
 				{% if page and not page.static %}
 					| <a href="/admin/pages/edit?key={{ page.key }}">edit</a>
 				{% endif %}

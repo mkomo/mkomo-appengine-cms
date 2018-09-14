@@ -215,7 +215,11 @@ class AssetRequestHandler(webapp.RequestHandler):
         uri = self.request.path[8:]
         asset = Asset.gql("where uri=:1", uri).get()
         if asset is not None:
-            self.response.headers['Content-Type'] = mimetypes.guess_type(uri)[0]
+            type = mimetypes.guess_type(uri)[0]
+            if type == "text/plain":
+                type = type + "; charset=UTF-8"
+            self.response.headers['Content-Type'] = type
+
             self.response.out.write(asset.payload)
         else:
             self.error(404)
