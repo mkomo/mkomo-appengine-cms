@@ -11,7 +11,7 @@ body {
 	max-width: 736px;
 }
 .container.dynamic-width{
-	width: 95%;	
+	width: 95%;
 }
 /*page header*/
 .header {
@@ -44,10 +44,10 @@ body {
 	display: block;
 }
 .nav li a {
-	border-radius: 4px;
+	border-radius: 22px;
 	font-size: 28px;
-	padding: 0px 15px;
-	margin: 15px 4px 0 0;
+	padding: 0px 15px 4px 15px;
+	margin: 15px 0 0 10px;
 	background-color: rgba(179,243,171,0.8);
 	color: #0f3f09;
 	text-decoration: none;
@@ -104,7 +104,7 @@ body {
 		background-color: rgba(179,243,171,0.8);
 		color: #0f3f09;
 		text-decoration: none;
-		position: relative;	
+		position: relative;
 		display: block;
 	}
 }
@@ -114,7 +114,7 @@ body {
 	clear: both;
 	background-color: rgb(17,153,0); /* The Fallback */
 	background-color: rgba(13,108,0,0.4);
-	padding: 10px;	
+	padding: 10px;
 }
 .content{
 	background-color: rgb(231,244,229); /* The Fallback */
@@ -204,9 +204,9 @@ body {
 	font-weight: bold;
 }
 .content .right-img{
-	border: 1px solid rgb(20, 172, 0); 
-	padding: 2px; 
-	float: right; 
+	border: 1px solid rgb(20, 172, 0);
+	padding: 2px;
+	float: right;
 	margin-left: 7px;
 }
 
