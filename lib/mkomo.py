@@ -2,6 +2,7 @@ import os
 import mimetypes
 import yaml
 import string
+from sets import Set
 
 # retrieved using instructions: https://github.com/GoogleCloudPlatform/Data-Pipeline
 import sys
@@ -73,6 +74,10 @@ class Page(db.Model):
     #html content
     date = db.DateTimeProperty()
     headline = db.StringProperty()
+    # see https://cdnjs.com/libraries/highlight.js/ for list
+    syntaxes = db.StringProperty()
+    def get_syntax_list(self):
+        return get_syntax_list([self])
     snippet = db.TextProperty()
     content = db.TextProperty()
     def get_snippet(self):
@@ -106,6 +111,20 @@ class List(db.Model):
         self.__dict__.update(entries)
 
 
+
+
+def get_syntax_list(pages):
+    syntaxes = Set([])
+    for page in pages:
+        if page.syntaxes:
+            for syntax in page.syntaxes.split(","):
+                syntaxes.add(syntax)
+
+    if len(syntaxes) > 0:
+        return syntaxes
+    else:
+        return False
+
 class Asset(db.Model):
     uri = db.StringProperty()
     payload = db.BlobProperty()
@@ -113,8 +132,8 @@ class Asset(db.Model):
 
 class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
+        """load a page from content/pages/ or from the datastore. If none found, fall through to list"""
         uri = self.request.path
-
         #handle static page
         filename = uri[1:] + '.html' if len(uri) > 1 else 'index.html'
         static_page_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'pages', filename)
@@ -130,21 +149,25 @@ class StandardPage(MavRequestHandler):
             return self.get_list()
 
     def get_list(self):
+        """retrieve a list from the datastore. If none found, fall through to content/lists dir."""
         list_id = self.request.path[1:]
         lst = List.gql("where id=:1", list_id).get()
-        if lst is None:
+        if lst is not None:
+            q = Page.all()
+            q.filter('list_id =', list_id)
+            if not users.is_current_user_admin():
+                q.filter('is_public',True)
+            q.order('-precedence')
+            pages = q.fetch(100)
+            return ModelAndView(view='list.html',
+                                model={'list': lst,
+                                       'pages': pages,
+                                       'syntax_list': get_syntax_list(pages)})
+        else:
             return self.get_list_fs()
-        q = Page.all()
-        q.filter('list_id =', list_id)
-        if not users.is_current_user_admin():
-            q.filter('is_public',True)
-        q.order('-precedence')
-        pages = q.fetch(100)
-        return ModelAndView(view='list.html',
-                            model={'list': lst,
-                                   'pages': pages})
 
     def get_list_fs(self):
+        """retrieve a yaml-based list from content/lists. If none found, fall through to list item"""
         list_id = self.request.path[1:]
         filename = list_id + ".yaml"
         list_yaml_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'lists', filename)
@@ -161,12 +184,14 @@ class StandardPage(MavRequestHandler):
                                 model={
                                        'list': lst,
                                        'request': self.request,
-                                       'pages': pages
+                                       'pages': pages,
+                                       'syntax_list': get_syntax_list(pages)
                                 })
         else:
             return self.get_list_fs_item()
 
     def get_list_fs_item(self):
+        """retrieve an item from yaml-based list"""
         if self.request.path[1:].rfind('/') > 1:
             list_id = self.request.path[1:self.request.path.rfind('/')]
             item_id = self.request.path[self.request.path.rfind('/')+1:]
@@ -184,6 +209,7 @@ class StandardPage(MavRequestHandler):
         raise NotFoundException
 
     def get_slug(self, headline):
+        """generate a url-safe string for a given headline"""
         exclude = set(string.punctuation)
         s = ''.join(ch for ch in headline if ch not in exclude)
         return s.lower().replace(" ", "-")
@@ -199,6 +225,7 @@ class StandardPage(MavRequestHandler):
             return None
 
     def get_page_from_entry(self, entry):
+        """generate a page object from an entry dict (usu originating in yaml)"""
         page = Page()
         if '_uri' not in entry or entry['_uri'] == None:
             entry['_uri'] = self.request.path + "/" + self.get_slug(entry['_headline'])

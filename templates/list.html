@@ -10,7 +10,7 @@
 					<div class="entry-date">{{ page.date }}</div>
 				{% endif %}
 				<div class="entry-headline">
-					{% if page.uri %} 
+					{% if page.uri %}
 						<a href="{{ page.uri }}">{{ page.headline }}</a>
 					{% else %}
 						{{ page.headline }}
@@ -30,7 +30,7 @@
 						{{ page.content|safe }}
 					{% endif %}
 					<div class="clear"></div>
-				</div> 
+				</div>
 			</div>
 		{% endfor %}
 	{% else %}
