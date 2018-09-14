@@ -31,7 +31,7 @@
 				<a href="/about">contact</a>
 			{% endif %}
 			{% if is_admin %}
-				<a href="{{logout_url}}">logout</a>
+				<a href="{{logout_url}}">admin logout</a>
 				{% if page and not page.static %}
 					| <a href="/admin/pages/edit?key={{ page.key }}">edit</a>
 				{% endif %}

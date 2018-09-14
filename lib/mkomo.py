@@ -18,12 +18,13 @@ import django.template.loader
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+
 class ModelAndView():
     def __init__(self,model,view):
         self.model = model
         self.view = view
-        
-        
+
+
 class NotFoundException(Exception):
     def __init__(self,message='The page you requested does not exit.'):
         self.message = message
@@ -50,7 +51,7 @@ class MavRequestHandler(webapp.RequestHandler):
         mav = self.post_model_and_view()
         if mav is not None:
             self.render(mav)
-            
+
     def render(self, mav):
         path = os.path.join(os.path.dirname(__file__), '..', 'templates', mav.view)
         model = mav.model
@@ -113,10 +114,14 @@ class Asset(db.Model):
 class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
         uri = self.request.path
+
+        #handle static page
         filename = uri[1:] + '.html' if len(uri) > 1 else 'index.html'
         static_page_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'pages', filename)
         if os.path.isfile(static_page_path):
             return ModelAndView(view = static_page_path, model = {})
+
+        #handle datastore page
         page = Page.gql("where uri=:1", uri).get()
         if page is not None and (page.is_public or users.is_current_user_admin()):
             return ModelAndView(view='standard.html',
@@ -154,7 +159,8 @@ class StandardPage(MavRequestHandler):
 
             return ModelAndView(view='list.html',
                                 model={
-                                       'list': lst, 'request': self.request,
+                                       'list': lst,
+                                       'request': self.request,
                                        'pages': pages
                                 })
         else:
@@ -174,7 +180,7 @@ class StandardPage(MavRequestHandler):
                         return ModelAndView(view='list-item.html',
                                             model={
                                                'list': lst,
-                                               'pages': [page]})
+                                               'page': page})
         raise NotFoundException
 
     def get_slug(self, headline):
@@ -201,6 +207,7 @@ class StandardPage(MavRequestHandler):
             #, extensions=[MyExtension(), 'path.to.my.ext', 'markdown.extensions.footnotes']
 
         page.load(**entry)
+        page.static = True
         return page
 
 class AssetRequestHandler(webapp.RequestHandler):

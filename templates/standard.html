@@ -1,16 +1,10 @@
 {% extends "base.html" %}
 
-{% ifequal page.title None %}
-	{% block title %}matt komorowski - {{page.title}}{% endblock %}
-{% endifequal %}
+{% block title %}{{page.title|default_if_none:page.headline|add:" - matt komorowski"}}{% endblock %}
 
-{% ifequal page.description None %}
-	{% block description %}{{page.description}}{% endblock %}
-{% endifequal %}
+{% block description %}{{page.description|default_if_none:page.headline}}{% endblock %}
 
-{% ifequal page.keywords None %}
-	{% block keywords %}{{page.keywords}}{% endblock %}
-{% endifequal %}
+{% block keywords %}{{page.keywords|default_if_none:"matt komorowski, matthew komorowski"}}{% endblock %}
 
 {% block headline %}{{page.headline}}{% endblock %}
 

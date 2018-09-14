@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "standard.html" %}
 
 {% block headline %}
 	<a href="/{{ list.id }}">/{{ list.id }}/</a>
-	{{ pages.0.headline }}
+	{{ page.headline }}
 {% endblock %}
 
 {% block content %}
 	<div class="entry">
 		<div class="entry-snippet">
-			{{ pages.0.snippet|safe }}
+			{{ page.snippet|safe }}
 			<div class="clear"></div>
 		</div>
 	</div>
