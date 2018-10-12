@@ -13,10 +13,10 @@
 	<link rel="stylesheet" href="/lib/static/css/ie.css" type="text/css" />
 	<![endif]-->
 {% block head_supplement %}{% endblock %}
-{% if page and page.get_syntax_list %}
+{% if syntax_list %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/androidstudio.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  {% for syntax in page.get_syntax_list %}
+  {% for syntax in syntax_list %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/{{syntax}}.min.js"></script>
   {% endfor %}
   <script>hljs.initHighlightingOnLoad();</script>

@@ -2,6 +2,7 @@ import os
 import mimetypes
 import yaml
 import string
+import traceback
 from sets import Set
 
 # retrieved using instructions: https://github.com/GoogleCloudPlatform/Data-Pipeline
@@ -37,6 +38,11 @@ class MavRequestHandler(webapp.RequestHandler):
             mav = self.get_model_and_view()
             if mav is not None:
                 self.render(mav)
+            else:
+                self.response.set_status(500)
+                self.render(ModelAndView(view='error.html',
+                                    model={'message': 'mav returned None',
+                                           'uri': self.request.path}))
         except NotFoundException, ex:
             self.response.set_status(404)
             self.render(ModelAndView(view='error.html',
@@ -45,7 +51,7 @@ class MavRequestHandler(webapp.RequestHandler):
         except Exception, ex:
             self.response.set_status(500)
             self.render(ModelAndView(view='error.html',
-                                model={'message': ex,
+                                model={'message': traceback.format_exc(),
                                        'uri': self.request.path}))
 
     def post(self):
@@ -54,16 +60,21 @@ class MavRequestHandler(webapp.RequestHandler):
             self.render(mav)
 
     def render(self, mav):
-        path = os.path.join(os.path.dirname(__file__), '..', 'templates', mav.view)
-        model = mav.model
-        if users.is_current_user_admin():
-            model['is_admin'] = True
-            model['logout_url'] = users.create_logout_url('/')
+        if 'yaml' in self.request.params:
+            yam_string = yaml.dump(mav, default_flow_style=False, default_style='|')
+            self.response.headers['Content-Type'] = "text/plain; charset=UTF-8"
+            self.response.out.write(yam_string)
+        else:
+            path = os.path.join(os.path.dirname(__file__), '..', 'templates', mav.view)
+            model = mav.model
+            if users.is_current_user_admin():
+                model['is_admin'] = True
+                model['logout_url'] = users.create_logout_url('/')
 
-        template_file = open(path)
-        compiled_template = Template(template_file.read())
-        template_file.close()
-        self.response.out.write(compiled_template.render(Context(model)))
+            template_file = open(path)
+            compiled_template = Template(template_file.read())
+            template_file.close()
+            self.response.out.write(compiled_template.render(Context(model)))
 
 class Page(db.Model):
     uri = db.StringProperty()
@@ -79,7 +90,9 @@ class Page(db.Model):
     def get_syntax_list(self):
         return get_syntax_list([self])
     snippet = db.TextProperty()
+    snippet_is_markdown = db.BooleanProperty(default=True)
     content = db.TextProperty()
+    content_is_markdown = db.BooleanProperty(default=True)
     def get_snippet(self):
         if self.snippet:
             return self.snippet
@@ -111,7 +124,11 @@ class List(db.Model):
         self.__dict__.update(entries)
 
 
-
+def hydrate(page):
+    if page.snippet_is_markdown and page.snippet is not None:
+        page.snippet = markdown.markdown(page.snippet)
+    if page.content_is_markdown and page.content is not None:
+        page.content = markdown.markdown(page.content)
 
 def get_syntax_list(pages):
     syntaxes = Set([])
@@ -143,8 +160,12 @@ class StandardPage(MavRequestHandler):
         #handle datastore page
         page = Page.gql("where uri=:1", uri).get()
         if page is not None and (page.is_public or users.is_current_user_admin()):
+            hydrate(page)
             return ModelAndView(view='standard.html',
-                                model={'page': page})
+                                model={
+                                    'page': page,
+                                    'syntax_list': get_syntax_list([page])
+                                })
         else:
             return self.get_list()
 
@@ -159,6 +180,8 @@ class StandardPage(MavRequestHandler):
                 q.filter('is_public',True)
             q.order('-precedence')
             pages = q.fetch(100)
+            for page in pages:
+                hydrate(page)
             return ModelAndView(view='list.html',
                                 model={'list': lst,
                                        'pages': pages,
@@ -178,6 +201,7 @@ class StandardPage(MavRequestHandler):
             pages = []
             for entry in listspec['entries']:
                 page = self.get_page_from_entry(entry)
+                hydrate(page)
                 pages.append(page)
 
             return ModelAndView(view='list.html',
@@ -205,7 +229,8 @@ class StandardPage(MavRequestHandler):
                         return ModelAndView(view='list-item.html',
                                             model={
                                                'list': lst,
-                                               'page': page})
+                                               'page': page,
+                                               'syntax_list': get_syntax_list([page])})
         raise NotFoundException
 
     def get_slug(self, headline):
@@ -227,13 +252,11 @@ class StandardPage(MavRequestHandler):
     def get_page_from_entry(self, entry):
         """generate a page object from an entry dict (usu originating in yaml)"""
         page = Page()
+
         if '_uri' not in entry or entry['_uri'] == None:
             entry['_uri'] = self.request.path + "/" + self.get_slug(entry['_headline'])
-        if ('_snippet_markdown' in entry):
-            entry['_snippet'] = markdown.markdown(entry['_snippet_markdown'])
-            #, extensions=[MyExtension(), 'path.to.my.ext', 'markdown.extensions.footnotes']
-
         page.load(**entry)
+        hydrate(page)
         page.static = True
         return page
 
