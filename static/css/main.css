@@ -129,6 +129,11 @@ body {
 	margin: 0px;
 }
 
+.content .error-page {
+	background: url(/lib/static/img/sad-robot-pexels-sm.png) no-repeat right bottom;
+	min-height: 500px;
+}
+
 .content .subtitle {
 	font-size: 12px;
 	padding: 4px 0;
@@ -146,7 +151,7 @@ body {
 .content h3{
 	margin: 0;
 	padding: 0;
-    color: #093304;
+  color: #093304;
 }
 .content p, .content .body ul{
 	margin: 4px 16px 16px 4px;
@@ -236,23 +241,23 @@ pre {
 	border-bottom: 1px solid #b3f3ab;
 	padding: 4px 4px 10px 4px;
 }
-.entry .entry-headline{
+.content .entry .entry-headline{
 	font-size: 1.6em;
 }
-.entry .entry-date{
+.content .entry .entry-date{
 	float: right;
 	font-size: 0.8em;
 	margin-top: 6px;
 }
-.entry .entry-headline a{
+.content .entry .entry-headline a{
 	color: rgb(13,108,0);
 }
-.entry .entry-snippet{
+.content .entry .entry-snippet{
 	clear: both;
 	padding: 0 4px;
 }
 
-.entry .tout{
+.content .entry .tout{
 	font-size: 0.9em;
 	margin-top: 6px;
 }

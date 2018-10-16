@@ -3,19 +3,17 @@
 {% block headline %}an error has occurred. bummer.{% endblock %}
 
 {% block content %}
-<div class="right-img">
-	<img src="/lib/static/img/levantium.com-2010-08-12-Sad-Robot-small.png" />
-	<div class="caption">source: <a href="http://levantium.com/2012/03/27/the-sovereignty-of-good/">levantium.com</a></div>
+<div class="error-page">
+	<pre>
+
+	{{ message }}
+	</pre>
+	<ul>
+		<li>return to the <a href="/">home page</a>.</li>
+		<li>
+			if you have a question or a comment, email me at
+			<span class="bold">matt at mkomo dot com</span>
+		</li>
+	</ul>
 </div>
-<pre>
-{{ message }}
-</pre>
-<ul>
-	<li>return to the <a href="/">home page</a>.</li>
-	<li>
-		if you have a question or a comment, email me at
-		<span class="bold">matt at mkomo dot com</span>
-	</li>
-</ul>
-<div style="clear:both"></div>
 {% endblock %}
