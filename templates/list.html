@@ -14,17 +14,23 @@
 		{% if pages %}
 			{% for page in pages %}
 				<div class="entry">
-					{% if page.date %}
-						<div class="entry-date">{{ page.date }}</div>
+					<a href="{{ page.uri }}" class="entry-img">
+					{% if page.img %}
+						<img src="{{ page.img }}">
+					{% else %}
+					{% comment %} from https://www.base64-image.de/ {% endcomment %}
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
 					{% endif %}
-						<a href="{{ page.uri }}" class="entry-img">
-						{% if page.img %}
-							<img src="{{ page.img }}">
+					</a>
+					{% if page.display_date %}
+						<div class="entry-date">
+						{% if list.show_short_date %}
+							{{ page.display_date_short }}
 						{% else %}
-						{% comment %} from https://www.base64-image.de/ {% endcomment %}
-							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
+							{{ page.display_date }}
 						{% endif %}
-						</a>
+						</div>
+					{% endif %}
 					<div class="entry-headline{% if page.img_square_css %} {{ page.img_square_css }}{% endif %}">
 						{% if page.uri %}
 							<a href="{{ page.uri }}">{{ page.headline }}</a>

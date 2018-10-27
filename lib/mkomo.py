@@ -86,7 +86,7 @@ class Page(db.Model):
     keywords = db.StringProperty()
     #html content
     date = db.DateTimeProperty()
-    date_last_edited = db.DateTimeProperty(auto_now=True)
+    date_last_edited = db.DateTimeProperty()
     headline = db.StringProperty()
     img = db.StringProperty()
     img_square_css = db.StringProperty()
@@ -100,6 +100,26 @@ class Page(db.Model):
     snippet_is_markdown = db.BooleanProperty(default=True)
     content = db.TextProperty()
     content_is_markdown = db.BooleanProperty(default=True)
+
+    def display_date(self):
+        if self.date:
+            if self.date_last_edited:
+                return '{} (updated {})'.format(self.date, self.date_last_edited)
+            else:
+                return self.date
+        elif self.date_last_edited:
+            return 'updated {}'.format(self.date_last_edited)
+        else:
+            return None
+
+
+    def display_date_short(self):
+        if self.date_last_edited:
+            return 'updated ' + self.date_last_edited.split('-')[0]
+        elif self.date:
+            return self.date.split('-')[0]
+        else:
+            return None
 
     def get_snippet(self):
         if self.snippet:
@@ -135,6 +155,9 @@ class List(db.Model):
 
     def get_display_type(self):
         return 'mkpf-box' if self.is_index  else 'mkpf-list'
+
+    def show_short_date(self):
+        return self.get_display_type() == 'mkpf-box'
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
