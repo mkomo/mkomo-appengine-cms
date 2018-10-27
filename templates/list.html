@@ -1,39 +1,58 @@
-{% extends "base.html" %}
+{% extends "base-raw.html" %}
 
-{% block headline %}{{ list.headline }}{% endblock %}
+{% block container_type %}{{ list.get_container_type }}{% endblock %}
 
-{% block content %}
-	{% if pages %}
-	    {% for page in pages %}
-			<div class="entry">
-				{% if page.date %}
-					<div class="entry-date">{{ page.date }}</div>
-				{% endif %}
-				<div class="entry-headline">
-					{% if page.uri %}
-						<a href="{{ page.uri }}">{{ page.headline }}</a>
-					{% else %}
-						{{ page.headline }}
+{% block body %}
+<div class="content-container {{ list.get_display_type }}">
+	<div class="content">
+		{% if list.headline %}
+			<h2>
+					{{ list.headline }}
+			</h2>
+		{% endif %}
+		<div class="body">
+		{% if pages %}
+			{% for page in pages %}
+				<div class="entry">
+					{% if page.date %}
+						<div class="entry-date">{{ page.date }}</div>
 					{% endif %}
-				</div>
-				<div class="entry-snippet">
-					{% if page.get_snippet %}
-						{{ page.get_snippet|safe }}
-						{% if page.uri %}
-							{% if request.path not in page.uri %}
-								<a class="tout" href="{{ page.uri }}">[read&nbsp;more]</a>
-							{% else %}
-								<a class="tout" href="{{ page.uri }}">[permalink]</a>
-							{% endif %}
+						<a href="{{ page.uri }}" class="entry-img">
+						{% if page.img %}
+							<img src="{{ page.img }}">
+						{% else %}
+						{% comment %} from https://www.base64-image.de/ {% endcomment %}
+							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=">
 						{% endif %}
-					{% else %}
-						{{ page.content|safe }}
-					{% endif %}
-					<div class="clear"></div>
+						</a>
+					<div class="entry-headline{% if page.img_square_css %} {{ page.img_square_css }}{% endif %}">
+						{% if page.uri %}
+							<a href="{{ page.uri }}">{{ page.headline }}</a>
+						{% else %}
+							{{ page.headline }}
+						{% endif %}
+					</div>
+					<div class="entry-snippet">
+						{% if page.get_snippet %}
+							{{ page.get_snippet|safe }}
+							{% if page.uri %}
+								{% if request.path not in page.uri %}
+									<a class="tout" href="{{ page.uri }}">[read&nbsp;more]</a>
+								{% else %}
+									<a class="tout" href="{{ page.uri }}">[permalink]</a>
+								{% endif %}
+							{% endif %}
+						{% else %}
+							{{ page.content|safe }}
+						{% endif %}
+						<div class="clear"></div>
+					</div>
 				</div>
-			</div>
-		{% endfor %}
-	{% else %}
-		<p>there's nothing here yet.</p>
-	{% endif %}
+			{% endfor %}
+		{% else %}
+			<p>there's nothing here yet.</p>
+		{% endif %}
+		</div>
+	</div>
+</div>
 {% endblock %}

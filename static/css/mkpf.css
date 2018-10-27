@@ -1,0 +1,115 @@
+/*
+	IN base-raw.html
+	body (background)
+		.contanter (margin and width restriction)
+			IN list.html (or base.html)
+			.content-container .mkpf-(box) (|semi-transparent border)
+				.content
+					h2
+					.body
+						IN list.html
+						.entry
+*/
+
+.mkpf-list .entry .entry-img {
+	display: none;
+}
+
+.mkpf-box.content-container {
+	margin: 10px 6% 10px 6%;
+	padding: 0;
+	max-width: 1400px;
+	background-color: transparent;
+}
+
+.mkpf-box .content {
+	background-color: transparent;
+	padding: 0;
+}
+
+.mkpf-box .content .body {
+	padding: 0;
+}
+
+.content-container::after {
+	clear: both;
+}
+
+.mkpf-box .entry {
+	margin: 10px 0.5% 0 0.5%;
+	display: inline-block;
+	background-color: rgba(13,108,0,0.4);
+	border: none;
+	padding-top: 30%;
+	width: 30%;
+	position: relative;
+}
+.mkpf-box .entry:nth-child(even) {
+	background-color: rgba(13,108,0,0.8);
+}
+.mkpf-box .entry:hover {
+	background-color: rgba(13,108,0,0.8);
+}
+.mkpf-box .entry:nth-child(even):hover {
+	background-color: rgba(13,108,0,1);
+}
+.mkpf-box .entry:nth-child(even) .entry-headline a, .mkpf-box .entry:nth-child(even) .entry-date {
+	color: #f8fff7;
+}
+.mkpf-box .entry-headline.light a {
+	color: #f8fff7!important;
+}
+.mkpf-box .entry-headline.dark a {
+	color: #0f3f09!important;
+}
+.mkpf-box .entry .entry-headline a {
+	text-decoration: none;
+	color: #0f3f09;
+}
+.mkpf-box .entry .entry-headline {
+	position: absolute;
+	text-align: right;
+	font-size: 25px;
+	font-weight: bold;
+	left: 30px;
+	bottom: 13px;
+	right: 17px;
+	line-height: 1.2;
+}
+.mkpf-box .entry .entry-img {
+	position: absolute;
+	left: 10px;
+	bottom: 10px;
+	right: 10px;
+}
+.mkpf-box .entry .entry-img img {
+	width: 100%;
+	vertical-align: bottom;
+}
+.mkpf-box .entry .entry-date {
+	margin: 0;
+	position: absolute;
+	text-decoration: none;
+	color: #0f3f09;
+	font-size: 15px;
+	left: 17px;
+	top: 13px;
+}
+.mkpf-box .entry-snippet {
+	display: none;
+}
+@media screen and (max-width: 900px) {
+
+	.mkpf-box .entry {
+		width: 46.5%;
+		padding-top: 46.5%;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.mkpf-box .entry {
+		width: 96%;
+		padding-top: 96%;
+	}
+
+}

@@ -20,6 +20,8 @@ import django.template.loader
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+INDEX_LIST_ID='index'
+
 
 class ModelAndView():
     def __init__(self,model,view):
@@ -28,7 +30,7 @@ class ModelAndView():
 
 
 class NotFoundException(Exception):
-    def __init__(self,message='The page you requested does not exit.'):
+    def __init__(self,message='The page you requested does not exist.'):
         self.message = message
 
 
@@ -84,7 +86,12 @@ class Page(db.Model):
     keywords = db.StringProperty()
     #html content
     date = db.DateTimeProperty()
+    date_last_edited = db.DateTimeProperty(auto_now=True)
     headline = db.StringProperty()
+    img = db.StringProperty()
+    img_square_css = db.StringProperty()
+    list_display = db.StringProperty()
+
     # see https://cdnjs.com/libraries/highlight.js/ for list
     syntaxes = db.StringProperty()
     def get_syntax_list(self):
@@ -93,9 +100,12 @@ class Page(db.Model):
     snippet_is_markdown = db.BooleanProperty(default=True)
     content = db.TextProperty()
     content_is_markdown = db.BooleanProperty(default=True)
+
     def get_snippet(self):
         if self.snippet:
             return self.snippet
+        elif not self.content:
+            return None
         else:
             break_text = '<br id="break"/>'
             index_of_break = self.content.find(break_text)
@@ -106,7 +116,6 @@ class Page(db.Model):
     #organization
     list_id = db.StringProperty()
     precedence = db.FloatProperty(default=1.0)
-    date_last_edited = db.DateTimeProperty(auto_now=True)
     is_public = db.BooleanProperty(default=False)
 
     def load(self, **entries):
@@ -119,6 +128,13 @@ class List(db.Model):
     description = db.StringProperty()
     keywords = db.StringProperty()
     headline = db.StringProperty()
+    is_index = db.BooleanProperty()
+
+    def get_container_type(self):
+        return 'dynamic-width' if self.is_index  else 'fixed-width'
+
+    def get_display_type(self):
+        return 'mkpf-box' if self.is_index  else 'mkpf-list'
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -151,11 +167,6 @@ class StandardPage(MavRequestHandler):
     def get_model_and_view(self):
         """load a page from content/pages/ or from the datastore. If none found, fall through to list"""
         uri = self.request.path
-        #handle static page
-        filename = uri[1:] + '.html' if len(uri) > 1 else 'index.html'
-        static_page_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'pages', filename)
-        if os.path.isfile(static_page_path):
-            return ModelAndView(view = static_page_path, model = {})
 
         #handle datastore page
         page = Page.gql("where uri=:1", uri).get()
@@ -167,11 +178,19 @@ class StandardPage(MavRequestHandler):
                                     'syntax_list': get_syntax_list([page])
                                 })
         else:
-            return self.get_list()
+            #handle static page
+            filename = uri[1:] + '.html' if len(uri) > 1 else 'index.html'
+            static_page_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'pages', filename)
+            if os.path.isfile(static_page_path):
+                return ModelAndView(view = static_page_path, model = {})
+
+        return self.get_list()
 
     def get_list(self):
         """retrieve a list from the datastore. If none found, fall through to content/lists dir."""
         list_id = self.request.path[1:]
+        if len(list_id) <= 0:
+            list_id = INDEX_LIST_ID
         lst = List.gql("where id=:1", list_id).get()
         if lst is not None:
             q = Page.all()
@@ -187,32 +206,29 @@ class StandardPage(MavRequestHandler):
                                        'pages': pages,
                                        'syntax_list': get_syntax_list(pages)})
         else:
-            return self.get_list_fs()
+            return self.get_list_fs(list_id)
 
-    def get_list_fs(self):
+    def get_list_fs(self, list_id):
         """retrieve a yaml-based list from content/lists. If none found, fall through to list item"""
-        list_id = self.request.path[1:]
-        filename = list_id + ".yaml"
-        list_yaml_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'lists', filename)
-        if os.path.isfile(list_yaml_path):
-            stream = open(list_yaml_path, 'r')
-            listspec = yaml.load(stream)
+        listspec = self.get_fs_list_spec(list_id)
+        if listspec is not None:
             lst = List(**listspec)
+            lst.is_index = list_id == INDEX_LIST_ID
             pages = []
             for entry in listspec['entries']:
                 page = self.get_page_from_entry(entry)
-                hydrate(page)
                 pages.append(page)
 
             return ModelAndView(view='list.html',
-                                model={
-                                       'list': lst,
-                                       'request': self.request,
-                                       'pages': pages,
-                                       'syntax_list': get_syntax_list(pages)
-                                })
-        else:
-            return self.get_list_fs_item()
+                            model={
+                                   'list': lst,
+                                   'request': self.request,
+                                   'pages': pages,
+                                   'syntax_list': get_syntax_list(pages)
+                            })
+
+        return self.get_list_fs_item()
+
 
     def get_list_fs_item(self):
         """retrieve an item from yaml-based list"""
@@ -239,22 +255,33 @@ class StandardPage(MavRequestHandler):
         s = ''.join(ch for ch in headline if ch not in exclude)
         return s.lower().replace(" ", "-")
 
-    def get_fs_list_spec(self, list_id):
+    def get_fs_list_spec(self, list_id, filter=None):
         filename = list_id + ".yaml"
         list_yaml_path = os.path.join(os.path.dirname(__file__), '..', 'content', 'lists', filename)
         if os.path.isfile(list_yaml_path):
             stream = open(list_yaml_path, 'r')
             listspec = yaml.load(stream)
-            return listspec
+            filtered_entries = []
+            for entry in listspec['entries']:
+                if filter is None or ('_list_id' in entry and entry['_list_id'] == filter):
+                    filtered_entries.append(entry)
+            if len(filtered_entries) == 0 and filter is not None:
+                return None
+            else:
+                listspec['entries'] = filtered_entries
+                listspec['_id'] = filter
+                return listspec
+        elif list_id != INDEX_LIST_ID:
+            return self.get_fs_list_spec(INDEX_LIST_ID, list_id)
         else:
             return None
 
     def get_page_from_entry(self, entry):
         """generate a page object from an entry dict (usu originating in yaml)"""
         page = Page()
-
-        if '_uri' not in entry or entry['_uri'] == None:
-            entry['_uri'] = self.request.path + "/" + self.get_slug(entry['_headline'])
+        if '_uri' not in entry or entry['_uri'] is None:
+            prefix = '' if '_list_id' not in entry or entry['_list_id'] is None else ('/' + entry['_list_id'])
+            entry['_uri'] = prefix + "/" + self.get_slug(entry['_headline'])
         page.load(**entry)
         hydrate(page)
         page.static = True
